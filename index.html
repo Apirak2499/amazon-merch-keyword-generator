@@ -8,64 +8,57 @@
 <style>
 :root {
   --primary: #FF9900;
-  --primary-dark: #E88B00;
+  --primary-dark: #E84B00;
   --bg: #0f1117;
   --card: #1a1d27;
   --card2: #232733;
   --text: #e4e4e7;
   --muted: #9ca3af;
+  --border: #2d3140;
   --green: #22c55e;
   --red: #ef4444;
   --blue: #3b82f6;
-  --border: #2d3140;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height:100vh; }
-.header { background: linear-gradient(135deg, #1a1d27 0%, #232733 100%); border-bottom: 2px solid var(--primary); padding: 16px 24px; display:flex; align-items:center; gap:16px; }
-.header img { width:40px; height:40px; }
+body { background:var(--bg); color:var(--text); font-family:'Segoe UI', sans-serif; }
+.header { display:flex; align-items:center; gap:12px; padding:16px 24px; background:var(--card); border-bottom:1px solid var(--border); }
 .header h1 { font-size:20px; color:var(--primary); }
-.header span { color:var(--muted); font-size:13px; }
-.container { max-width:1400px; margin:0 auto; padding:20px; }
-.grid2 { display:grid; grid-template-columns: 350px 1fr; gap:20px; }
-.panel { background:var(--card); border-radius:12px; border:1px solid var(--border); padding:20px; }
-.panel h2 { font-size:15px; color:var(--primary); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
-label { display:block; font-size:13px; color:var(--muted); margin-bottom:4px; }
-input, select, textarea { width:100%; padding:10px 12px; background:var(--card2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:13px; outline:none; }
-input:focus, select:focus, textarea:focus { border-color:var(--primary); }
-.btn { padding:10px 20px; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition: all .2s; }
+.header span { font-size:12px; color:var(--muted); }
+.container { padding:20px; }
+.grid2 { display:grid; grid-template-columns:360px 1fr; gap:20px; }
+.panel { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; }
+.panel h2 { font-size:14px; margin-bottom:12px; color:var(--text); }
+.field { margin-bottom:10px; }
+.field label { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; }
+.field input, .field select { width:100%; padding:8px 12px; background:var(--card2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:13px; outline:none; }
+.field input:focus { border-color:var(--primary); }
+.btn { padding:8px 16px; border:none; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; transition:.2s; }
 .btn-primary { background:var(--primary); color:#000; }
-.btn-primary:hover { background:var(--primary-dark); transform:translateY(-1px); }
-.btn-green { background:var(--green); color:#000; }
-.btn-green:hover { opacity:.9; }
-.btn-blue { background:var(--blue); color:#fff; }
-.btn-blue:hover { opacity:.9; }
+.btn-primary:hover { background:var(--primary-dark); }
+.btn-primary:disabled { opacity:.5; cursor:not-allowed; }
+.btn-sm { padding:5px 10px; font-size:11px; }
+.btn-green { background:var(--green); color:#fff; }
 .btn-red { background:var(--red); color:#fff; }
-.btn-sm { padding:6px 12px; font-size:12px; }
-.btn:disabled { opacity:.5; cursor:not-allowed; }
-.field { margin-bottom:14px; }
-.row { display:flex; gap:10px; align-items:end; }
-.row > * { flex:1; }
-.images-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(90px,1fr)); gap:8px; max-height:320px; overflow-y:auto; margin-top:10px; padding:4px; }
-.img-thumb { position:relative; border-radius:8px; overflow:hidden; border:2px solid transparent; cursor:pointer; aspect-ratio:1; }
-.img-thumb img { width:100%; height:100%; object-fit:cover; }
+.btn-blue { background:var(--blue); color:#fff; }
+.images-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; max-height:400px; overflow-y:auto; }
+.img-thumb { position:relative; border-radius:8px; overflow:hidden; border:2px solid transparent; cursor:pointer; transition:.2s; }
 .img-thumb.selected { border-color:var(--primary); }
-.img-thumb .check { position:absolute; top:4px; right:4px; width:20px; height:20px; background:var(--primary); border-radius:50%; display:none; align-items:center; justify-content:center; font-size:12px; color:#000; }
+.img-thumb img { width:100%; height:95px; object-fit:cover; display:block; }
+.img-thumb .check { position:absolute; top:4px; right:4px; background:var(--primary); color:#000; width:20px; height:20px; border-radius:50%; display:none; align-items:center; justify-content:center; font-size:12px; }
 .img-thumb.selected .check { display:flex; }
-.img-thumb .fname { position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,.75); font-size:9px; padding:2px 4px; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+.img-thumb .fname { font-size:10px; padding:2px 4px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.progress-bar { width:100%; height:6px; background:var(--card2); border-radius:4px; overflow:hidden; margin:8px 0; }
+.progress-fill { height:100%; background:var(--primary); transition:width .3s; }
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:12px; }
+th { background:var(--card2); padding:8px; text-align:left; font-size:11px; color:var(--muted); text-transform:uppercase; }
+td { padding:8px; border-bottom:1px solid var(--border); vertical-align:top; }
+.badge { padding:3px 8px; border-radius:4px; font-size:11px; font-weight:600; }
 .badge-green { background:rgba(34,197,94,.15); color:var(--green); }
 .badge-red { background:rgba(239,68,68,.15); color:var(--red); }
-.badge-blue { background:rgba(59,130,246,.15); color:var(--blue); }
 .badge-orange { background:rgba(255,153,0,.15); color:var(--primary); }
-table { width:100%; border-collapse:collapse; font-size:12px; }
-th { background:var(--card2); padding:10px 8px; text-align:left; font-size:11px; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1; }
-td { padding:8px; border-bottom:1px solid var(--border); vertical-align:top; }
-tr:hover td { background:rgba(255,153,0,.03); }
-.table-wrap { max-height:500px; overflow:auto; border-radius:8px; border:1px solid var(--border); }
-.progress-bar { width:100%; height:6px; background:var(--card2); border-radius:3px; overflow:hidden; margin:8px 0; }
-.progress-fill { height:100%; background:var(--primary); transition: width .3s; border-radius:3px; }
-.status-box { padding:10px 14px; border-radius:8px; font-size:12px; margin:10px 0; }
-.status-info { background:rgba(59,130,246,.1); border:1px solid rgba(59,130,246,.3); color:var(--blue); }
+.status-box { padding:8px 12px; border-radius:8px; margin-bottom:10px; font-size:13px; }
+.status-info { background:rgba(59,130,246,.1); border:1px solid rgba(59,130,246,.1); border:1px solid rgba(59,130,246,.3); color:var(--blue); }
 .status-success { background:rgba(34,197,94,.1); border:1px solid rgba(34,197,94,.3); color:var(--green); }
 .status-error { background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); color:var(--red); }
 .kw-tag { display:inline-block; margin:2px; padding:3px 8px; background:var(--card2); border-radius:4px; font-size:11px; border:1px solid var(--border); }
@@ -108,7 +101,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
   <svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="#FF9900"/><text x="20" y="26" text-anchor="middle" fill="#000" font-size="20" font-weight="bold">M</text></svg>
   <div>
     <h1>Amazon Merch Keyword Generator</h1>
-    <span>à¸ªà¸£à¹à¸²à¸ SEO Keywords à¸ªà¸³à¸«à¸£à¸±à¸ Amazon Merch on Demand à¸à¸²à¸à¸£à¸¹à¸à¸¥à¸²à¸¢à¹à¸ªà¸·à¹à¸­</span>
+    <span>สร้าง SEO Keywords สำหรับ Amazon Merch on Demand จากรูปลายเสื้อ</span>
   </div>
 </div>
 
@@ -118,7 +111,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
     <div>
       <!-- API Config -->
       <div class="panel mb10">
-        <h2>âï¸ à¸à¸±à¹à¸à¸à¹à¸² AI API</h2>
+        <h2>⚙️ ตั้งค่า AI API</h2>
         <div class="api-selector">
           <div class="api-opt active" onclick="selectAPI('openai')" id="opt-openai">
             <div class="name">OpenAI</div>
@@ -131,39 +124,39 @@ tr:hover td { background:rgba(255,153,0,.03); }
         </div>
         <div class="field">
           <label>API Key</label>
-          <input type="password" id="apiKey" placeholder="sk-... à¸«à¸£à¸·à¸­ sk-ant-...">
+          <input type="password" id="apiKey" placeholder="sk-... หรือ sk-ant-...">
         </div>
         <div class="field">
-          <label>Brand Name (à¸ªà¸³à¸«à¸£à¸±à¸à¹à¸ªà¹à¹à¸à¸à¹à¸­à¸ Brand)</label>
-          <input type="text" id="brandName" placeholder="à¸à¸·à¹à¸­à¹à¸à¸£à¸à¸à¹à¸à¸­à¸à¸à¸¸à¸" maxlength="50">
+          <label>Brand Name (สำหรับใส่ในช่อง Brand)</label>
+          <input type="text" id="brandName" placeholder="ชื่อแบรนด์ของคุณ" maxlength="50">
           <span class="char-count" id="brandCount">0/50</span>
         </div>
       </div>
 
       <!-- Image Upload -->
       <div class="panel">
-        <h2>ð¼ï¸ à¹à¸¥à¸·à¸­à¸à¸£à¸¹à¸à¸¥à¸²à¸¢à¹à¸ªà¸·à¹à¸­</h2>
+        <h2>🖼️ เลือกรูปลายเสื้อ</h2>
         <input type="file" id="fileInput" multiple accept="image/*" style="display:none">
         <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()" style="width:100%">
-          ð à¹à¸¥à¸·à¸­à¸à¸£à¸¹à¸à¸à¸²à¸à¹à¸à¸¥à¹à¸à¸­à¸£à¹
+          📁 เลือกรูปจากโฟลเดอร์
         </button>
         <div class="select-all-bar mt6">
-          <span id="imgCount">à¸¢à¸±à¸à¹à¸¡à¹à¹à¸à¹à¹à¸¥à¸·à¸­à¸à¸£à¸¹à¸</span>
+          <span id="imgCount">ยังไม่ได้เลือกรูป</span>
           <div>
-            <button class="btn btn-sm btn-blue" onclick="selectAllImages()">à¹à¸¥à¸·à¸­à¸à¸à¸±à¹à¸à¸«à¸¡à¸</button>
-            <button class="btn btn-sm btn-red" onclick="deselectAllImages()">à¸¢à¸à¹à¸¥à¸´à¸</button>
+            <button class="btn btn-sm btn-blue" onclick="selectAllImages()">เลือกทั้งหมด</button>
+            <button class="btn btn-sm btn-red" onclick="deselectAllImages()">ยกเลิก</button>
           </div>
         </div>
         <div class="images-grid" id="imagesGrid"></div>
 
         <div class="mt10">
           <button class="btn btn-primary" id="btnGenerate" onclick="generateKeywords()" style="width:100%" disabled>
-            ð à¸ªà¸£à¹à¸²à¸ Keywords à¸à¸²à¸à¸£à¸¹à¸à¸à¸µà¹à¹à¸¥à¸·à¸­à¸
+            🚀 สร้าง Keywords จากรูปที่เลือก
           </button>
         </div>
         <div id="progressArea" class="hidden mt6">
           <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-          <div style="font-size:12px; color:var(--muted)" id="progressText">à¸à¸³à¸¥à¸±à¸à¸à¸£à¸°à¸¡à¸§à¸¥à¸à¸¥...</div>
+          <div style="font-size:12px; color:var(--muted)" id="progressText">กำลังประมวลผล...</div>
         </div>
       </div>
     </div>
@@ -172,10 +165,10 @@ tr:hover td { background:rgba(255,153,0,.03); }
     <div>
       <div class="panel">
         <div class="flex-between mb10">
-          <h2 style="margin:0">ð à¸à¸¥à¸¥à¸±à¸à¸à¹ Keywords</h2>
+          <h2 style="margin:0">📊 ผลลัพธ์ Keywords</h2>
           <div style="display:flex; gap:8px;">
-            <button class="btn btn-sm btn-green" onclick="exportExcel()" id="btnExport" disabled>ð¥ Export Excel</button>
-            <button class="btn btn-sm btn-red" onclick="clearResults()" id="btnClear" disabled>ðï¸ à¸¥à¹à¸²à¸à¸à¸¥à¸¥à¸±à¸à¸à¹</button>
+            <button class="btn btn-sm btn-green" onclick="exportExcel()" id="btnExport" disabled>📥 Export Excel</button>
+            <button class="btn btn-sm btn-red" onclick="clearResults()" id="btnClear" disabled>🗑️ ล้างผลลัพธ์</button>
           </div>
         </div>
 
@@ -186,16 +179,16 @@ tr:hover td { background:rgba(255,153,0,.03); }
             <thead>
               <tr>
                 <th style="width:40px">#</th>
-                <th style="width:70px">à¸£à¸¹à¸</th>
+                <th style="width:70px">รูป</th>
                 <th style="width:180px">Image Path</th>
-                <th>Title <span style="font-size:10px;color:var(--muted)">(60 à¸à¸±à¸§à¸­à¸±à¸à¸©à¸£)</span></th>
-                <th style="width:160px">Brand <span style="font-size:10px;color:var(--muted)">(50 à¸à¸±à¸§à¸­à¸±à¸à¸©à¸£)</span></th>
+                <th>Title <span style="font-size:10px;color:var(--muted)">(60 ตัวอักษร)</span></th>
+                <th style="width:160px">Brand <span style="font-size:10px;color:var(--muted)">(50 ตัวอักษร)</span></th>
                 <th style="width:200px">Keywords / Amazon Check</th>
-                <th style="width:80px">à¸ªà¸à¸²à¸à¸°</th>
+                <th style="width:80px">สถานะ</th>
               </tr>
             </thead>
             <tbody id="resultsBody">
-              <tr><td colspan="7" style="text-align:center; padding:40px; color:var(--muted)">à¹à¸¥à¸·à¸­à¸à¸£à¸¹à¸à¹à¸¥à¸°à¸à¸ "à¸ªà¸£à¹à¸²à¸ Keywords" à¹à¸à¸·à¹à¸­à¹à¸£à¸´à¹à¸¡à¸à¹à¸</td></tr>
+              <tr><td colspan="7" style="text-align:center; padding:40px; color:var(--muted)">เลือกรูปและกด "สร้าง Keywords" เพื่อเริ่มต้น</td></tr>
             </tbody>
           </table>
         </div>
@@ -249,14 +242,14 @@ function renderImages() {
     div.className = 'img-thumb' + (img.selected ? ' selected' : '');
     div.innerHTML = `
       <img src="${img.url}" onclick="event.stopPropagation(); previewImage('${img.url}')">
-      <div class="check">â</div>
+      <div class="check">✓</div>
       <div class="fname">${img.name}</div>
     `;
     div.onclick = () => { img.selected = !img.selected; renderImages(); };
     grid.appendChild(div);
   });
   const sel = uploadedImages.filter(i => i.selected).length;
-  document.getElementById('imgCount').textContent = `${sel}/${uploadedImages.length} à¸£à¸¹à¸à¸à¸¹à¸à¹à¸¥à¸·à¸­à¸`;
+  document.getElementById('imgCount').textContent = `${sel}/${uploadedImages.length} รูปถูกเลือก`;
   document.getElementById('btnGenerate').disabled = sel === 0 || !document.getElementById('apiKey').value;
 }
 
@@ -409,7 +402,7 @@ async function generateKeywords() {
     const img = selected[idx];
     const pct = Math.round(((idx) / selected.length) * 100);
     document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressText').textContent = `à¸à¸³à¸¥à¸±à¸à¸§à¸´à¹à¸à¸£à¸²à¸°à¸«à¹à¸£à¸¹à¸ ${idx+1}/${selected.length}: ${img.name}`;
+    document.getElementById('progressText').textContent = `กำลังวิเคราะห์รูป ${idx+1}/${selected.length}: ${img.name}`;
 
     let result = {
       imageUrl: img.url,
@@ -462,18 +455,18 @@ async function generateKeywords() {
   }
 
   document.getElementById('progressFill').style.width = '100%';
-  document.getElementById('progressText').textContent = `à¹à¸ªà¸£à¹à¸à¸ªà¸´à¹à¸! à¸à¸£à¸°à¸¡à¸§à¸¥à¸à¸¥ ${selected.length} à¸£à¸¹à¸`;
+  document.getElementById('progressText').textContent = `เสร็จสิ้น! ประมวลผล ${selected.length} รูป`;
   document.getElementById('btnGenerate').disabled = false;
   document.getElementById('btnExport').disabled = false;
   document.getElementById('btnClear').disabled = false;
 
-  showStatus(`â à¸ªà¸£à¹à¸²à¸ Keywords à¸ªà¸³à¹à¸£à¹à¸ ${results.length} à¸£à¸¹à¸`, 'success');
+  showStatus(`✅ สร้าง Keywords สำเร็จ ${results.length} รูป`, 'success');
 }
 
 function renderResults() {
   const tbody = document.getElementById('resultsBody');
   if (results.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:40px; color:var(--muted)">à¹à¸¥à¸·à¸­à¸à¸£à¸¹à¸à¹à¸¥à¸°à¸à¸ "à¸ªà¸£à¹à¸²à¸ Keywords" à¹à¸à¸·à¹à¸­à¹à¸£à¸´à¹à¸¡à¸à¹à¸</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:40px; color:var(--muted)">เลือกรูปและกด "สร้าง Keywords" เพื่อเริ่มต้น</td></tr>';
     return;
   }
 
@@ -484,17 +477,17 @@ function renderResults() {
     const brandClass = brandLen > 50 ? 'char-over' : 'char-ok';
 
     let statusBadge = '';
-    if (r.status === 'processing') statusBadge = '<span class="badge badge-orange"><span class="spinner"></span> à¸à¸³à¸¥à¸±à¸à¸ªà¸£à¹à¸²à¸</span>';
-    else if (r.status === 'done') statusBadge = '<span class="badge badge-green">â à¸ªà¸³à¹à¸£à¹à¸</span>';
-    else statusBadge = `<span class="badge badge-red">â Error</span><br><span style="font-size:10px;color:var(--red)">${r.error||''}</span>`;
+    if (r.status === 'processing') statusBadge = '<span class="badge badge-orange"><span class="spinner"></span> กำลังสร้าง</span>';
+    else if (r.status === 'done') statusBadge = '<span class="badge badge-green">✓ สำเร็จ</span>';
+    else statusBadge = `<span class="badge badge-red">✗ Error</span><br><span style="font-size:10px;color:var(--red)">${r.error||''}</span>`;
 
     let kwHTML = '';
     if (r.amazonChecks.length > 0) {
       kwHTML = r.amazonChecks.map(c => {
         const cls = c.found === true ? 'valid' : (c.found === false ? 'invalid' : '');
-        const icon = c.found === true ? 'â' : (c.found === false ? 'â' : '?');
+        const icon = c.found === true ? '✓' : (c.found === false ? '✗' : '?');
         return `<span class="kw-tag ${cls}" title="${c.suggestions?.join(', ') || 'Manual check needed'}">${icon} ${c.keyword}</span>
-          <a href="${getAmazonSearchURL(c.keyword)}" target="_blank" class="amazon-link">ð</a>`;
+          <a href="${getAmazonSearchURL(c.keyword)}" target="_blank" class="amazon-link">🔍</a>`;
       }).join(' ');
     } else if (r.keywords.length > 0) {
       kwHTML = r.keywords.map(k => `<span class="kw-tag">${k}</span>`).join(' ');
@@ -552,7 +545,7 @@ function exportExcel() {
   results.forEach((r, i) => {
     const validKWs = r.validKeywords.join(', ');
     const allKWs = r.keywords.join(', ');
-    // à¸ªà¸£à¹à¸²à¸ bullet points à¸à¸²à¸ valid keywords
+    // สร้าง bullet points จาก valid keywords
     const bp1 = r.validKeywords.slice(0, 3).join(' | ');
     const bp2 = r.validKeywords.slice(3, 6).join(' | ');
     const desc = `${r.title}. Perfect gift for ${r.validKeywords.slice(0, 2).map(k => k.replace(' T-Shirt','')).join(' and ')} lovers.`;
@@ -595,7 +588,7 @@ function exportExcel() {
   const filename = `Amazon_Merch_Keywords_${dateStr}.xlsx`;
 
   XLSX.writeFile(wb, filename);
-  showStatus(`ð¥ à¸à¸²à¸§à¸à¹à¹à¸«à¸¥à¸à¹à¸à¸¥à¹ ${filename} à¸ªà¸³à¹à¸£à¹à¸!`, 'success');
+  showStatus(`📥 ดาวน์โหลดไฟล์ ${filename} สำเร็จ!`, 'success');
 }
 
 // Init
