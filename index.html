@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amazon Merch Keyword Generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root {
+  --primary: #FF9900;
+  --primary-dark: #E88B00;
+  --bg: #0f1117;
+  --card: #1a1d27;
+  --card2: #232733;
+  --text: #e4e4e7;
+  --muted: #9ca3af;
+  --green: #22c55e;
+  --red: #ef4444;
+  --blue: #3b82f6;
+  --border: #2d3140;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height:100vh; }
+.header { background: linear-gradient(135deg, #1a1d27 0%, #232733 100%); border-bottom: 2px solid var(--primary); padding: 16px 24px; display:flex; align-items:center; gap:16px; }
+.header img { width:40px; height:40px; }
+.header h1 { font-size:20px; color:var(--primary); }
+.header span { color:var(--muted); font-size:13px; }
+.container { max-width:1400px; margin:0 auto; padding:20px; }
+.grid2 { display:grid; grid-template-columns: 350px 1fr; gap:20px; }
+.panel { background:var(--card); border-radius:12px; border:1px solid var(--border); padding:20px; }
+.panel h2 { font-size:15px; color:var(--primary); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+label { display:block; font-size:13px; color:var(--muted); margin-bottom:4px; }
+input, select, textarea { width:100%; padding:10px 12px; background:var(--card2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:13px; outline:none; }
+input:focus, select:focus, textarea:focus { border-color:var(--primary); }
+.btn { padding:10px 20px; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition: all .2s; }
+.btn-primary { background:var(--primary); color:#000; }
+.btn-primary:hover { background:var(--primary-dark); transform:translateY(-1px); }
+.btn-green { background:var(--green); color:#000; }
+.btn-green:hover { opacity:.9; }
+.btn-blue { background:var(--blue); color:#fff; }
+.btn-blue:hover { opacity:.9; }
+.btn-red { background:var(--red); color:#fff; }
+.btn-sm { padding:6px 12px; font-size:12px; }
+.btn:disabled { opacity:.5; cursor:not-allowed; }
+.field { margin-bottom:14px; }
+.row { display:flex; gap:10px; align-items:end; }
+.row > * { flex:1; }
+.images-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(90px,1fr)); gap:8px; max-height:320px; overflow-y:auto; margin-top:10px; padding:4px; }
+.img-thumb { position:relative; border-radius:8px; overflow:hidden; border:2px solid transparent; cursor:pointer; aspect-ratio:1; }
+.img-thumb img { width:100%; height:100%; object-fit:cover; }
+.img-thumb.selected { border-color:var(--primary); }
+.img-thumb .check { position:absolute; top:4px; right:4px; width:20px; height:20px; background:var(--primary); border-radius:50%; display:none; align-items:center; justify-content:center; font-size:12px; color:#000; }
+.img-thumb.selected .check { display:flex; }
+.img-thumb .fname { position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,.75); font-size:9px; padding:2px 4px; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+.badge-green { background:rgba(34,197,94,.15); color:var(--green); }
+.badge-red { background:rgba(239,68,68,.15); color:var(--red); }
+.badge-blue { background:rgba(59,130,246,.15); color:var(--blue); }
+.badge-orange { background:rgba(255,153,0,.15); color:var(--primary); }
+table { width:100%; border-collapse:collapse; font-size:12px; }
+th { background:var(--card2); padding:10px 8px; text-align:left; font-size:11px; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1; }
+td { padding:8px; border-bottom:1px solid var(--border); vertical-align:top; }
+tr:hover td { background:rgba(255,153,0,.03); }
+.table-wrap { max-height:500px; overflow:auto; border-radius:8px; border:1px solid var(--border); }
+.progress-bar { width:100%; height:6px; background:var(--card2); border-radius:3px; overflow:hidden; margin:8px 0; }
+.progress-fill { height:100%; background:var(--primary); transition: width .3s; border-radius:3px; }
+.status-box { padding:10px 14px; border-radius:8px; font-size:12px; margin:10px 0; }
+.status-info { background:rgba(59,130,246,.1); border:1px solid rgba(59,130,246,.3); color:var(--blue); }
+.status-success { background:rgba(34,197,94,.1); border:1px solid rgba(34,197,94,.3); color:var(--green); }
+.status-error { background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); color:var(--red); }
+.kw-tag { display:inline-block; margin:2px; padding:3px 8px; background:var(--card2); border-radius:4px; font-size:11px; border:1px solid var(--border); }
+.kw-tag.valid { border-color:var(--green); color:var(--green); }
+.kw-tag.invalid { border-color:var(--red); color:var(--muted); text-decoration:line-through; }
+.amazon-link { color:var(--primary); text-decoration:none; font-size:11px; }
+.amazon-link:hover { text-decoration:underline; }
+.char-count { font-size:11px; float:right; }
+.char-ok { color:var(--green); }
+.char-over { color:var(--red); }
+.flex-between { display:flex; justify-content:space-between; align-items:center; }
+.gap10 { gap:10px; }
+.mt10 { margin-top:10px; }
+.mt6 { margin-top:6px; }
+.mb10 { margin-bottom:10px; }
+.tabs { display:flex; gap:4px; margin-bottom:14px; }
+.tab { padding:8px 16px; border-radius:8px 8px 0 0; background:var(--card2); color:var(--muted); cursor:pointer; font-size:13px; border:1px solid var(--border); border-bottom:none; }
+.tab.active { background:var(--card); color:var(--primary); border-color:var(--primary); }
+.hidden { display:none; }
+.select-all-bar { display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:12px; color:var(--muted); }
+.editable-cell { background:var(--card2); border:1px solid transparent; border-radius:4px; padding:4px 6px; min-height:24px; outline:none; font-size:12px; color:var(--text); }
+.editable-cell:focus { border-color:var(--primary); }
+.spinner { display:inline-block; width:14px; height:14px; border:2px solid var(--border); border-top-color:var(--primary); border-radius:50%; animation:spin .6s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.api-selector { display:flex; gap:8px; margin-bottom:10px; }
+.api-opt { flex:1; padding:10px; border-radius:8px; border:2px solid var(--border); cursor:pointer; text-align:center; transition:.2s; }
+.api-opt:hover { border-color:var(--muted); }
+.api-opt.active { border-color:var(--primary); background:rgba(255,153,0,.05); }
+.api-opt .name { font-size:13px; font-weight:600; }
+.api-opt .desc { font-size:11px; color:var(--muted); }
+.toast { position:fixed; bottom:24px; right:24px; padding:12px 20px; border-radius:8px; font-size:13px; z-index:9999; animation:slideIn .3s; }
+@keyframes slideIn { from { transform:translateY(20px); opacity:0; } }
+.img-preview-modal { position:fixed; inset:0; background:rgba(0,0,0,.8); display:flex; align-items:center; justify-content:center; z-index:999; }
+.img-preview-modal img { max-width:90%; max-height:90%; border-radius:8px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <svg width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="#FF9900"/><text x="20" y="26" text-anchor="middle" fill="#000" font-size="20" font-weight="bold">M</text></svg>
+  <div>
+    <h1>Amazon Merch Keyword Generator</h1>
+    <span>à¸ªà¸£à¹à¸²à¸ SEO Keywords à¸ªà¸³à¸«à¸£à¸±à¸ Amazon Merch on Demand à¸à¸²à¸à¸£à¸¹à¸à¸¥à¸²à¸¢à¹à¸ªà¸·à¹à¸­</span>
+  </div>
+</div>
+
+<div class="container">
+  <div class="grid2">
+    <!-- LEFT PANEL -->
+    <div>
+      <!-- API Config -->
+      <div class="panel mb10">
+        <h2>âï¸ à¸à¸±à¹à¸à¸à¹à¸² AI API</h2>
+        <div class="api-selector">
+          <div class="api-opt active" onclick="selectAPI('openai')" id="opt-openai">
+            <div class="name">OpenAI</div>
+            <div class="desc">GPT-4o Vision</div>
+          </div>
+          <div class="api-opt" onclick="selectAPI('claude')" id="opt-claude">
+            <div class="name">Claude</div>
+            <div class="desc">Sonnet Vision</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>API Key</label>
+          <input type="password" id="apiKey" placeholder="sk-... à¸«à¸£à¸·à¸­ sk-ant-...">
+        </div>
+        <div class="field">
+          <label>Brand Name (à¸ªà¸³à¸«à¸£à¸±à¸à¹à¸ªà¹à¹à¸à¸à¹à¸­à¸ Brand)</label>
+          <input type="text" id="brandName" placeholder="à¸à¸·à¹à¸­à¹à¸à¸£à¸à¸à¹à¸à¸­à¸à¸à¸¸à¸" maxlength="50">
+          <span class="char-count" id="brandCount">0/50</span>
+        </div>
+      </div>
+
+      <!-- Image Upload -->
+      <div class="panel">
+        <h2>ð¼ï¸ à¹à¸¥à¸·à¸­à¸à¸£à¸¹à¸à¸¥à¸²à¸¢à¹à¸ªà¸·à¹à¸­</h2>
+        <input type="file" id="fileInput" multiple accept="image/*" style="display:none">
+        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()" style="width:100%">
+          ð à¹à¸¥à¸·à¸­à¸à¸£à¸¹à¸à¸à¸²à¸à¹à¸à¸¥à¹à¸à¸­à¸£à¹
+        </button>
+        <div class="select-all-bar mt6">
+          <span id="imgCount">à¸¢à¸±à¸à¹à¸¡à¹à¹à¸à¹à¹à¸¥à¸·à¸­à¸à¸£à¸¹à¸</span>
+          <div>
+            <button class="btn btn-sm btn-blue" onclick="selectAllImages()">à¹à¸¥à¸·à¸­à¸à¸à¸±à¹à¸à¸«à¸¡à¸</button>
+            <button class="btn btn-sm btn-red" onclick="deselectAllImages()">à¸¢à¸à¹à¸¥à¸´à¸</button>
+          </div>
+        </div>
+        <div class="images-grid" id="imagesGrid"></div>
+
+        <div class="mt10">
+          <button class="btn btn-primary" id="btnGenerate" onclick="generateKeywords()" style="width:100%" disabled>
+            ð à¸ªà¸£à¹à¸²à¸ Keywords à¸à¸²à¸à¸£à¸¹à¸à¸à¸µà¹à¹à¸¥à¸·à¸­à¸
+          </button>
+        </div>
+        <div id="progressArea" class="hidden mt6">
+          <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+          <div style="font-size:12px; color:var(--muted)" id="progressText">à¸à¸³à¸¥à¸±à¸à¸à¸£à¸°à¸¡à¸§à¸¥à¸à¸¥...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div>
+      <div class="panel">
+        <div class="flex-between mb10">
+          <h2 style="margin:0">ð à¸à¸¥à¸¥à¸±à¸à¸à¹ Keywords</h2>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-sm btn-green" onclick="exportExcel()" id="btnExport" disabled>ð¥ Export Excel</button>
+            <button class="btn btn-sm btn-red" onclick="clearResults()" id="btnClear" disabled>ðï¸ à¸¥à¹à¸²à¸à¸à¸¥à¸¥à¸±à¸à¸à¹</button>
+          </div>
+        </div>
+
+        <div id="statusMsg"></div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:40px">#</th>
+                <th style="width:70px">à¸£à¸¹à¸</th>
+                <th style="width:180px">Image Path</th>
+                <th>Title <span style="font-size:10px;color:var(--muted)">(60 à¸à¸±à¸§à¸­à¸±à¸à¸©à¸£)</span></th>
+                <th style="width:160px">Brand <span style="font-size:10px;color:var(--muted)">(50 à¸à¸±à¸§à¸­à¸±à¸à¸©à¸£)</span></th>
+                <th style="width:200px">Keywords / Amazon Check</th>
+                <th style="width:80px">à¸ªà¸à¸²à¸à¸°</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody">
+              <tr><td colspan="7" style="text-align:center; padding:40px; color:var(--muted)">à¹à¸¥à¸·à¸­à¸à¸£à¸¹à¸à¹à¸¥à¸°à¸à¸ "à¸ªà¸£à¹à¸²à¸ Keywords" à¹à¸à¸·à¹à¸­à¹à¸£à¸´à¹à¸¡à¸à¹à¸</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Image Preview Modal -->
+<div id="previewModal" class="img-preview-modal hidden" onclick="this.classList.add('hidden')">
+  <img id="previewImg" src="">
+</div>
+
+<script>
+// State
+let selectedAPI = 'openai';
+let uploadedImages = []; // {file, url, name, selected}
+let results = []; // {imagePath, title, brand, keywords, validKeywords, status}
+
+// API Selection
+function selectAPI(api) {
+  selectedAPI = api;
+  document.querySelectorAll('.api-opt').forEach(el => el.classList.remove('active'));
+  document.getElementById('opt-' + api).classList.add('active');
+}
+
+// Brand character count
+document.getElementById('brandName').addEventListener('input', function() {
+  const len = this.value.length;
+  const el = document.getElementById('brandCount');
+  el.textContent = len + '/50';
+  el.className = 'char-count ' + (len > 50 ? 'char-over' : 'char-ok');
+});
+
+// File Input
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  const files = Array.from(e.target.files);
+  files.forEach(f => {
+    if (!f.type.startsWith('image/')) return;
+    const url = URL.createObjectURL(f);
+    uploadedImages.push({ file: f, url, name: f.name, selected: true });
+  });
+  renderImages();
+});
+
+function renderImages() {
+  const grid = document.getElementById('imagesGrid');
+  grid.innerHTML = '';
+  uploadedImages.forEach((img, i) => {
+    const div = document.createElement('div');
+    div.className = 'img-thumb' + (img.selected ? ' selected' : '');
+    div.innerHTML = `
+      <img src="${img.url}" onclick="event.stopPropagation(); previewImage('${img.url}')">
+      <div class="check">â</div>
+      <div class="fname">${img.name}</div>
+    `;
+    div.onclick = () => { img.selected = !img.selected; renderImages(); };
+    grid.appendChild(div);
+  });
+  const sel = uploadedImages.filter(i => i.selected).length;
+  document.getElementById('imgCount').textContent = `${sel}/${uploadedImages.length} à¸£à¸¹à¸à¸à¸¹à¸à¹à¸¥à¸·à¸­à¸`;
+  document.getElementById('btnGenerate').disabled = sel === 0 || !document.getElementById('apiKey').value;
+}
+
+function selectAllImages() { uploadedImages.forEach(i => i.selected = true); renderImages(); }
+function deselectAllImages() { uploadedImages.forEach(i => i.selected = false); renderImages(); }
+
+function previewImage(url) {
+  document.getElementById('previewImg').src = url;
+  document.getElementById('previewModal').classList.remove('hidden');
+}
+
+// API key change
+document.getElementById('apiKey').addEventListener('input', () => {
+  const sel = uploadedImages.filter(i => i.selected).length;
+  document.getElementById('btnGenerate').disabled = sel === 0 || !document.getElementById('apiKey').value;
+});
+
+// Convert image to base64
+function imageToBase64(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.readAsDataURL(file);
+  });
+}
+
+// Call AI to analyze image
+async function analyzeImage(file) {
+  const apiKey = document.getElementById('apiKey').value;
+  const base64 = await imageToBase64(file);
+  const mimeType = file.type || 'image/png';
+
+  const systemPrompt = `You are an expert Amazon Merch on Demand keyword researcher. Analyze the t-shirt design image and generate highly searchable SEO keywords that real Amazon customers would search for.
+
+RULES:
+1. Generate 8-12 keyword phrases that customers would type into Amazon search
+2. Each keyword MUST end with "T-Shirt" (e.g., "Funny Cat T-Shirt", "Retro Gaming T-Shirt")
+3. Focus on: theme, style, occasion, audience, humor/emotion, niche
+4. Use English only
+5. Mix broad + niche keywords for best SEO coverage
+6. Also generate a suggested Title (max 60 characters) that includes the best keyword
+7. Return ONLY valid JSON in this exact format:
+
+{"keywords":["keyword1 T-Shirt","keyword2 T-Shirt",...],"suggestedTitle":"Your 60-char Title Here"}`;
+
+  if (selectedAPI === 'openai') {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: [
+            { type: 'text', text: 'Analyze this t-shirt design and generate Amazon SEO keywords:' },
+            { type: 'image_url', image_url: { url: `data:${mimeType};base64,${base64}` } }
+          ]}
+        ],
+        max_tokens: 1000,
+        temperature: 0.7
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const content = data.choices[0].message.content;
+    return parseAIResponse(content);
+  } else {
+    // Claude API
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: mimeType, data: base64 } },
+            { type: 'text', text: systemPrompt + '\n\nAnalyze this t-shirt design and generate Amazon SEO keywords.' }
+          ]
+        }]
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const content = data.content[0].text;
+    return parseAIResponse(content);
+  }
+}
+
+function parseAIResponse(content) {
+  // Try to extract JSON from response
+  const jsonMatch = content.match(/\{[\s\S]*\}/);
+  if (jsonMatch) {
+    try {
+      return JSON.parse(jsonMatch[0]);
+    } catch(e) {}
+  }
+  // Fallback: try to parse keywords from text
+  const keywords = [];
+  const lines = content.split('\n');
+  lines.forEach(line => {
+    const match = line.match(/["']([^"']*T-Shirt[^"']*)["']/i);
+    if (match) keywords.push(match[1]);
+  });
+  return { keywords, suggestedTitle: keywords[0] || 'T-Shirt Design' };
+}
+
+// Amazon Auto-Suggest Check
+async function checkAmazonKeyword(keyword) {
+  try {
+    const encoded = encodeURIComponent(keyword);
+    const url = `https://completion.amazon.com/api/2017/suggestions?mid=ATVPDKIKX0DER&alias=aps&prefix=${encoded}`;
+    const res = await fetch(url);
+    if (!res.ok) return { found: false, suggestions: [] };
+    const data = await res.json();
+    const suggestions = (data.suggestions || []).map(s => s.value);
+    const found = suggestions.some(s => s.toLowerCase().includes('t-shirt') || s.toLowerCase().includes('tshirt'));
+    return { found, suggestions: suggestions.slice(0, 5) };
+  } catch(e) {
+    // CORS might block - return unknown
+    return { found: null, suggestions: [], error: 'CORS' };
+  }
+}
+
+function getAmazonSearchURL(keyword) {
+  return `https://www.amazon.com/s?k=${encodeURIComponent(keyword)}&i=fashion`;
+}
+
+// Main Generate Function
+async function generateKeywords() {
+  const selected = uploadedImages.filter(i => i.selected);
+  if (selected.length === 0) return;
+
+  const brand = document.getElementById('brandName').value || 'My Brand';
+
+  document.getElementById('btnGenerate').disabled = true;
+  document.getElementById('progressArea').classList.remove('hidden');
+  document.getElementById('btnExport').disabled = true;
+  document.getElementById('btnClear').disabled = true;
+
+  results = [];
+
+  for (let idx = 0; idx < selected.length; idx++) {
+    const img = selected[idx];
+    const pct = Math.round(((idx) / selected.length) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = `à¸à¸³à¸¥à¸±à¸à¸§à¸´à¹à¸à¸£à¸²à¸°à¸«à¹à¸£à¸¹à¸ ${idx+1}/${selected.length}: ${img.name}`;
+
+    let result = {
+      imageUrl: img.url,
+      imagePath: img.name,
+      title: '',
+      brand: brand.substring(0, 50),
+      keywords: [],
+      validKeywords: [],
+      amazonChecks: [],
+      status: 'processing'
+    };
+    results.push(result);
+    renderResults();
+
+    try {
+      // Step 1: AI Analysis
+      const aiResult = await analyzeImage(img.file);
+      result.keywords = aiResult.keywords || [];
+      result.title = (aiResult.suggestedTitle || '').substring(0, 60);
+
+      // Step 2: Amazon Auto-Suggest Check
+      result.amazonChecks = [];
+      for (const kw of result.keywords) {
+        const check = await checkAmazonKeyword(kw);
+        result.amazonChecks.push({ keyword: kw, ...check });
+
+        if (check.found === true) {
+          result.validKeywords.push(kw);
+        } else if (check.found === null) {
+          // CORS blocked - mark as needs manual check
+          result.validKeywords.push(kw); // Include but mark for manual check
+        }
+
+        // Small delay to avoid rate limiting
+        await new Promise(r => setTimeout(r, 200));
+      }
+
+      // If we have valid keywords, rebuild title from best one
+      if (result.validKeywords.length > 0 && !result.title) {
+        result.title = result.validKeywords[0].substring(0, 60);
+      }
+
+      result.status = 'done';
+    } catch(err) {
+      result.status = 'error';
+      result.error = err.message;
+    }
+
+    renderResults();
+  }
+
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressText').textContent = `à¹à¸ªà¸£à¹à¸à¸ªà¸´à¹à¸! à¸à¸£à¸°à¸¡à¸§à¸¥à¸à¸¥ ${selected.length} à¸£à¸¹à¸`;
+  document.getElementById('btnGenerate').disabled = false;
+  document.getElementById('btnExport').disabled = false;
+  document.getElementById('btnClear').disabled = false;
+
+  showStatus(`â à¸ªà¸£à¹à¸²à¸ Keywords à¸ªà¸³à¹à¸£à¹à¸ ${results.length} à¸£à¸¹à¸`, 'success');
+}
+
+function renderResults() {
+  const tbody = document.getElementById('resultsBody');
+  if (results.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:40px; color:var(--muted)">à¹à¸¥à¸·à¸­à¸à¸£à¸¹à¸à¹à¸¥à¸°à¸à¸ "à¸ªà¸£à¹à¸²à¸ Keywords" à¹à¸à¸·à¹à¸­à¹à¸£à¸´à¹à¸¡à¸à¹à¸</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = results.map((r, i) => {
+    const titleLen = r.title.length;
+    const titleClass = titleLen > 60 ? 'char-over' : 'char-ok';
+    const brandLen = r.brand.length;
+    const brandClass = brandLen > 50 ? 'char-over' : 'char-ok';
+
+    let statusBadge = '';
+    if (r.status === 'processing') statusBadge = '<span class="badge badge-orange"><span class="spinner"></span> à¸à¸³à¸¥à¸±à¸à¸ªà¸£à¹à¸²à¸</span>';
+    else if (r.status === 'done') statusBadge = '<span class="badge badge-green">â à¸ªà¸³à¹à¸£à¹à¸</span>';
+    else statusBadge = `<span class="badge badge-red">â Error</span><br><span style="font-size:10px;color:var(--red)">${r.error||''}</span>`;
+
+    let kwHTML = '';
+    if (r.amazonChecks.length > 0) {
+      kwHTML = r.amazonChecks.map(c => {
+        const cls = c.found === true ? 'valid' : (c.found === false ? 'invalid' : '');
+        const icon = c.found === true ? 'â' : (c.found === false ? 'â' : '?');
+        return `<span class="kw-tag ${cls}" title="${c.suggestions?.join(', ') || 'Manual check needed'}">${icon} ${c.keyword}</span>
+          <a href="${getAmazonSearchURL(c.keyword)}" target="_blank" class="amazon-link">ð</a>`;
+      }).join(' ');
+    } else if (r.keywords.length > 0) {
+      kwHTML = r.keywords.map(k => `<span class="kw-tag">${k}</span>`).join(' ');
+    }
+
+    return `<tr>
+      <td>${i+1}</td>
+      <td><img src="${r.imageUrl}" style="width:55px;height:55px;object-fit:cover;border-radius:6px;cursor:pointer" onclick="previewImage('${r.imageUrl}')"></td>
+      <td style="font-size:11px;word-break:break-all">${r.imagePath}</td>
+      <td>
+        <div contenteditable="true" class="editable-cell" oninput="updateTitle(${i}, this.textContent)">${r.title}</div>
+        <span class="char-count ${titleClass}">${titleLen}/60</span>
+      </td>
+      <td>
+        <div contenteditable="true" class="editable-cell" oninput="updateBrand(${i}, this.textContent)">${r.brand}</div>
+        <span class="char-count ${brandClass}">${brandLen}/50</span>
+      </td>
+      <td style="max-width:200px">${kwHTML}</td>
+      <td>${statusBadge}</td>
+    </tr>`;
+  }).join('');
+}
+
+function updateTitle(i, val) {
+  results[i].title = val.substring(0, 60);
+  // Update char count in DOM without full re-render
+}
+
+function updateBrand(i, val) {
+  results[i].brand = val.substring(0, 50);
+}
+
+function showStatus(msg, type) {
+  const el = document.getElementById('statusMsg');
+  el.innerHTML = `<div class="status-box status-${type === 'success' ? 'success' : type === 'error' ? 'error' : 'info'}">${msg}</div>`;
+  setTimeout(() => { el.innerHTML = ''; }, 5000);
+}
+
+function clearResults() {
+  results = [];
+  renderResults();
+  document.getElementById('btnExport').disabled = true;
+  document.getElementById('btnClear').disabled = true;
+  document.getElementById('progressArea').classList.add('hidden');
+}
+
+// Export to Excel
+function exportExcel() {
+  if (results.length === 0) return;
+
+  const wsData = [
+    ['#', 'Image Path', 'Title', 'Brand', 'Bullet Point 1', 'Bullet Point 2', 'Description', 'Keywords (Valid)', 'All Keywords', 'Status']
+  ];
+
+  results.forEach((r, i) => {
+    const validKWs = r.validKeywords.join(', ');
+    const allKWs = r.keywords.join(', ');
+    // à¸ªà¸£à¹à¸²à¸ bullet points à¸à¸²à¸ valid keywords
+    const bp1 = r.validKeywords.slice(0, 3).join(' | ');
+    const bp2 = r.validKeywords.slice(3, 6).join(' | ');
+    const desc = `${r.title}. Perfect gift for ${r.validKeywords.slice(0, 2).map(k => k.replace(' T-Shirt','')).join(' and ')} lovers.`;
+
+    wsData.push([
+      i + 1,
+      r.imagePath,
+      r.title,
+      r.brand,
+      bp1,
+      bp2,
+      desc.substring(0, 256),
+      validKWs,
+      allKWs,
+      r.status === 'done' ? 'Success' : 'Error'
+    ]);
+  });
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+  // Column widths
+  ws['!cols'] = [
+    { wch: 4 },   // #
+    { wch: 30 },  // Image Path
+    { wch: 60 },  // Title
+    { wch: 25 },  // Brand
+    { wch: 40 },  // BP1
+    { wch: 40 },  // BP2
+    { wch: 50 },  // Description
+    { wch: 50 },  // Valid Keywords
+    { wch: 60 },  // All Keywords
+    { wch: 10 },  // Status
+  ];
+
+  XLSX.utils.book_append_sheet(wb, ws, 'Merch Keywords');
+
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0,10).replace(/-/g,'');
+  const filename = `Amazon_Merch_Keywords_${dateStr}.xlsx`;
+
+  XLSX.writeFile(wb, filename);
+  showStatus(`ð¥ à¸à¸²à¸§à¸à¹à¹à¸«à¸¥à¸à¹à¸à¸¥à¹ ${filename} à¸ªà¸³à¹à¸£à¹à¸!`, 'success');
+}
+
+// Init
+renderImages();
+</script>
+</body>
+</html>
