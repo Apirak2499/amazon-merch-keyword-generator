@@ -24,47 +24,1445 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:'Segoe UI',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
+/* Header */
+.header { background:linear-gradient(135deg,#1a1d27,#232733); border-bottom:2px solid var(--primary); padding:12px 24px; display:flex; align-items:center; gap:16px; }
+.header h1 { font-size:18px; color:var(--primary); }
+.header span { color:var(--muted); font-size:12px; }
 
+/* Tabs */
+.main-tabs { display:flex; gap:2px; padding:8px 24px 0; background:var(--card); border-bottom:1px solid var(--border); overflow-x:auto; }
+.main-tab { padding:10px 18px; border-radius:8px 8px 0 0; background:var(--card2); color:var(--muted); cursor:pointer; font-size:13px; border:1px solid var(--border); border-bottom:none; white-space:nowrap; transition:.2s; }
+.main-tab:hover { color:var(--text); }
+.main-tab.active { background:var(--bg); color:var(--primary); border-color:var(--primary); font-weight:600; }
+.tab-content { display:none; }
+.tab-content.active { display:block; }
 
+/* Layout */
+.container { max-width:1500px; margin:0 auto; padding:16px; }
+.grid2 { display:grid; grid-template-columns:360px 1fr; gap:16px; }
+.panel { background:var(--card); border-radius:10px; border:1px solid var(--border); padding:16px; margin-bottom:12px; }
+.panel h2 { font-size:14px; color:var(--primary); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
 
+/* Form */
+label { display:block; font-size:12px; color:var(--muted); margin-bottom:3px; }
+input,select,textarea { width:100%; padding:8px 10px; background:var(--card2); border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:13px; outline:none; }
+input:focus,select:focus,textarea:focus { border-color:var(--primary); }
+.field { margin-bottom:12px; }
 
+/* Buttons */
+.btn { padding:8px 16px; border:none; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:.2s; }
+.btn-primary { background:var(--primary); color:#000; }
+.btn-primary:hover { background:var(--primary-dark); }
+.btn-green { background:var(--green); color:#000; }
+.btn-blue { background:var(--blue); color:#fff; }
+.btn-red { background:var(--red); color:#fff; }
+.btn-sm { padding:5px 10px; font-size:11px; }
+.btn:disabled { opacity:.4; cursor:not-allowed; }
 
+/* Toggle */
+.toggle-row { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); }
+.toggle-row:last-child { border-bottom:none; }
+.toggle-label { font-size:13px; }
+.toggle-label small { color:var(--muted); font-size:11px; }
+.toggle-switch { position:relative; width:44px; height:24px; cursor:pointer; }
+.toggle-switch input { opacity:0; width:0; height:0; }
+.toggle-slider { position:absolute; inset:0; background:var(--card2); border-radius:12px; border:1px solid var(--border); transition:.3s; }
+.toggle-slider:before { content:''; position:absolute; height:18px; width:18px; left:2px; bottom:2px; background:var(--muted); border-radius:50%; transition:.3s; }
+.toggle-switch input:checked + .toggle-slider { background:var(--primary); border-color:var(--primary); }
+.toggle-switch input:checked + .toggle-slider:before { transform:translateX(20px); background:#000; }
 
+/* Images Grid */
+.images-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(80px,1fr)); gap:6px; max-height:280px; overflow-y:auto; margin-top:8px; padding:4px; }
+.img-thumb { position:relative; border-radius:6px; overflow:hidden; border:2px solid transparent; cursor:pointer; aspect-ratio:1; }
+.img-thumb img { width:100%; height:100%; object-fit:cover; }
+.img-thumb.selected { border-color:var(--primary); }
+.img-thumb .check { position:absolute; top:3px; right:3px; width:18px; height:18px; background:var(--primary); border-radius:50%; display:none; align-items:center; justify-content:center; font-size:10px; color:#000; }
+.img-thumb.selected .check { display:flex; }
+.img-thumb .fname { position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,.8); font-size:8px; padding:2px 3px; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
+/* Table */
+table { width:100%; border-collapse:collapse; font-size:11px; }
+th { background:var(--card2); padding:8px 6px; text-align:left; font-size:10px; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1; }
+td { padding:6px; border-bottom:1px solid var(--border); vertical-align:top; }
+tr:hover td { background:rgba(255,153,0,.03); }
+.table-wrap { max-height:600px; overflow:auto; border-radius:6px; border:1px solid var(--border); }
 
+/* Badges */
+.badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600; }
+.badge-green { background:rgba(34,197,94,.15); color:var(--green); }
+.badge-red { background:rgba(239,68,68,.15); color:var(--red); }
+.badge-blue { background:rgba(59,130,246,.15); color:var(--blue); }
+.badge-orange { background:rgba(255,153,0,.15); color:var(--primary); }
+.badge-yellow { background:rgba(234,179,8,.15); color:var(--yellow); }
 
+/* Keyword Tags */
+.kw-tag { display:inline-block; margin:1px; padding:2px 6px; background:var(--card2); border-radius:3px; font-size:10px; border:1px solid var(--border); }
+.kw-tag.valid { border-color:var(--green); color:var(--green); }
+.kw-tag.invalid { border-color:var(--red); color:var(--muted); text-decoration:line-through; }
+.kw-tag.replaced { border-color:var(--yellow); color:var(--yellow); }
 
+/* Color chips */
+.color-chip { display:inline-block; padding:1px 6px; border-radius:3px; font-size:9px; margin:1px; border:1px solid var(--border); }
 
+/* Progress */
+.progress-bar { width:100%; height:5px; background:var(--card2); border-radius:3px; overflow:hidden; margin:6px 0; }
+.progress-fill { height:100%; background:var(--primary); transition:width .3s; border-radius:3px; }
 
+/* Status */
+.status-box { padding:8px 12px; border-radius:6px; font-size:12px; margin:8px 0; }
+.status-info { background:rgba(59,130,246,.1); border:1px solid rgba(59,130,246,.3); color:var(--blue); }
+.status-success { background:rgba(34,197,94,.1); border:1px solid rgba(34,197,94,.3); color:var(--green); }
+.status-error { background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); color:var(--red); }
 
+/* Editable */
+.editable-cell { background:var(--card2); border:1px solid transparent; border-radius:3px; padding:3px 5px; min-height:22px; outline:none; font-size:11px; color:var(--text); }
+.editable-cell:focus { border-color:var(--primary); }
 
+/* Char count */
+.char-count { font-size:10px; }
+.char-ok { color:var(--green); }
+.char-over { color:var(--red); }
 
+/* Spinner */
+.spinner { display:inline-block; width:12px; height:12px; border:2px solid var(--border); border-top-color:var(--primary); border-radius:50%; animation:spin .6s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
 
+/* API selector */
+.api-selector { display:flex; gap:6px; margin-bottom:8px; }
+.api-opt { flex:1; padding:8px; border-radius:6px; border:2px solid var(--border); cursor:pointer; text-align:center; transition:.2s; }
+.api-opt:hover { border-color:var(--muted); }
+.api-opt.active { border-color:var(--primary); background:rgba(255,153,0,.05); }
+.api-opt .name { font-size:12px; font-weight:600; }
+.api-opt .desc { font-size:10px; color:var(--muted); }
 
+/* Modal */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.7); display:flex; align-items:center; justify-content:center; z-index:999; }
+.modal-overlay.hidden { display:none; }
+.modal-content { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px; max-width:500px; width:90%; max-height:80vh; overflow-y:auto; }
+.modal-content h3 { color:var(--primary); margin-bottom:12px; font-size:15px; }
 
+/* DB Table */
+.db-table { width:100%; }
+.db-table th { font-size:11px; padding:8px; }
+.db-table td { padding:6px 8px; font-size:12px; }
+.db-search { margin-bottom:10px; }
 
+/* Flex helpers */
+.flex-between { display:flex; justify-content:space-between; align-items:center; }
+.flex-gap { display:flex; gap:8px; align-items:center; }
+.hidden { display:none; }
+.mt8 { margin-top:8px; }
+.mb8 { margin-bottom:8px; }
+.amazon-link { color:var(--primary); text-decoration:none; font-size:10px; }
+.amazon-link:hover { text-decoration:underline; }
 
+/* Scrollbar */
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:var(--card2); }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--muted); }
 
+/* Season indicator */
+.season-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:4px; font-size:10px; background:rgba(234,179,8,.1); color:var(--yellow); border:1px solid rgba(234,179,8,.3); }
 
+/* Safety badge */
+.safety-safe { color:var(--green); }
+.safety-restricted { color:var(--red); }
 
+/* Stats bar */
+.stats-bar { display:flex; gap:16px; padding:8px 12px; background:var(--card2); border-radius:6px; margin-bottom:10px; font-size:11px; flex-wrap:wrap; }
+.stat-item { display:flex; align-items:center; gap:4px; }
+.stat-num { font-weight:700; color:var(--primary); }
 
+/* Enhanced panel hover */
+.panel { transition:border-color .2s,box-shadow .2s; }
+.panel:hover { border-color:rgba(255,153,0,.2); box-shadow:0 0 12px rgba(255,153,0,.04); }
 
+/* Supabase status */
+#supabaseStatus code { user-select:all; }
+</style>
+</head>
+<body>
 
+<!-- HEADER -->
+<div class="header">
+  <svg width="36" height="36" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="#FF9900"/><text x="20" y="26" text-anchor="middle" fill="#000" font-size="20" font-weight="bold">M</text></svg>
+  <div>
+    <h1>Amazon Merch Keyword Generator V3</h1>
+    <span>สร้าง SEO Keywords + Title + Colors + Safety Check สำหรับ Amazon Merch on Demand</span>
+  </div>
+</div>
 
+<!-- MAIN TABS -->
+<div class="main-tabs">
+  <div class="main-tab active" onclick="switchTab('generator')">🚀 Generator</div>
+  <div class="main-tab" onclick="switchTab('apiconfig')">🔑 AI API</div>
+  <div class="main-tab" onclick="switchTab('rejected')">🚫 Rejected Keywords</div>
+  <div class="main-tab" onclick="switchTab('seasonal')">🎄 Seasonal Keywords</div>
+  <div class="main-tab" onclick="switchTab('trademark')">™️ Trademark DB</div>
+  <div class="main-tab" onclick="switchTab('history')">📜 History</div>
+  <div class="main-tab" onclick="switchTab('settings')">⚙️ Settings</div>
+</div>
 
+<!-- ======================== TAB: GENERATOR ======================== -->
+<div id="tab-generator" class="tab-content active">
+<div class="container">
+  <div class="grid2">
+    <!-- LEFT PANEL -->
+    <div>
+      <!-- Brand Name -->
+      <div class="panel">
+        <h2>🏷️ Brand</h2>
+        <div class="field">
+          <label>Brand Name (50 ตัวอักษร)</label>
+          <input type="text" id="brandName" placeholder="ชื่อแบรนด์ของคุณ" maxlength="50">
+          <span class="char-count char-ok" id="brandCount">0/50</span>
+        </div>
+        <div id="apiMiniStatus" style="padding:6px 10px;border-radius:6px;background:var(--card2);font-size:11px;margin-top:4px;display:flex;justify-content:space-between;align-items:center">
+          <span id="apiMiniProvider" style="color:var(--muted)">AI: ยังไม่ได้ตั้งค่า</span>
+          <a href="#" onclick="event.preventDefault();switchTab('apiconfig')" style="color:var(--blue);font-size:11px;text-decoration:none">ตั้งค่า AI →</a>
+        </div>
+      </div>
 
+      <!-- Content Options -->
+      <div class="panel">
+        <h2>📝 Content Options</h2>
+        <div class="toggle-row">
+          <div class="toggle-label">Bullet Point 1 <small>(250 chars)</small></div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleBP1" checked onchange="saveToggles()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-label">Bullet Point 2 <small>(250 chars)</small></div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleBP2" checked onchange="saveToggles()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-label">Description <small>(2,000 chars)</small></div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleDesc" onchange="saveToggles()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
 
+      <!-- Image Upload -->
+      <div class="panel">
+        <h2>🖼️ เลือกรูปลายเสื้อ</h2>
+        <input type="file" id="fileInput" multiple accept="image/*" style="display:none">
+        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()" style="width:100%">
+          📁 เลือกรูปจากโฟลเดอร์
+        </button>
+        <div class="flex-between mt8" style="font-size:12px;color:var(--muted)">
+          <span id="imgCount">ยังไม่ได้เลือกรูป</span>
+          <div class="flex-gap">
+            <button class="btn btn-sm btn-blue" onclick="selectAllImages()">เลือกทั้งหมด</button>
+            <button class="btn btn-sm btn-red" onclick="deselectAllImages()">ยกเลิก</button>
+          </div>
+        </div>
+        <div class="images-grid" id="imagesGrid"></div>
+        <div class="mt8">
+          <button class="btn btn-primary" id="btnGenerate" onclick="generateKeywords()" style="width:100%" disabled>
+            🚀 สร้าง Keywords จากรูปที่เลือก
+          </button>
+        </div>
+        <div id="progressArea" class="hidden mt8">
+          <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+          <div style="font-size:11px;color:var(--muted)" id="progressText">กำลังประมวลผล...</div>
+        </div>
+      </div>
+    </div>
 
+    <!-- RIGHT PANEL -->
+    <div>
+      <div class="panel">
+        <div class="flex-between mb8">
+          <h2 style="margin:0">📊 ผลลัพธ์</h2>
+          <div class="flex-gap">
+            <button class="btn btn-sm btn-green" onclick="exportExcel()" id="btnExport" disabled>📥 Export Excel</button>
+            <button class="btn btn-sm btn-red" onclick="clearResults()" id="btnClear" disabled>🗑️ ล้าง</button>
+          </div>
+        </div>
+        <div id="statsBar" class="stats-bar hidden">
+          <div class="stat-item">รูปทั้งหมด: <span class="stat-num" id="statTotal">0</span></div>
+          <div class="stat-item">สำเร็จ: <span class="stat-num" id="statDone">0</span></div>
+          <div class="stat-item">Keywords ที่ผ่าน: <span class="stat-num" id="statKW">0</span></div>
+          <div class="stat-item">ถูกกรอง: <span class="stat-num" id="statFiltered">0</span></div>
+        </div>
+        <div id="statusMsg"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:30px">#</th>
+                <th style="width:55px">รูป</th>
+                <th style="width:120px">Image Path</th>
+                <th>Title <small>(60)</small></th>
+                <th style="width:100px">Brand <small>(50)</small></th>
+                <th style="width:80px">Type</th>
+                <th style="width:180px">Keywords / Amazon</th>
+                <th style="width:120px">Colors</th>
+                <th style="width:60px">สถานะ</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody">
+              <tr><td colspan="9" style="text-align:center;padding:30px;color:var(--muted)">เลือกรูปและกด "สร้าง Keywords" เพื่อเริ่มต้น</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
 
+<!-- ======================== TAB: AI API CONFIG ======================== -->
+<div id="tab-apiconfig" class="tab-content">
+<div class="container" style="max-width:900px">
+  <div class="panel">
+    <h2>🔑 ตั้งค่า AI API Provider</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:16px">เลือก AI Provider และใส่ API Key สำหรับวิเคราะห์รูปลายเสื้อ (รองรับ 4 providers)</p>
 
+    <!-- Provider Selection -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+      <div class="api-opt" onclick="selectAPI('openai')" id="opt-openai">
+        <div style="font-size:20px;margin-bottom:4px">🟢</div>
+        <div class="name">OpenAI</div>
+        <div class="desc">GPT-4o Vision</div>
+      </div>
+      <div class="api-opt" onclick="selectAPI('claude')" id="opt-claude">
+        <div style="font-size:20px;margin-bottom:4px">🟠</div>
+        <div class="name">Claude</div>
+        <div class="desc">Sonnet 4 Vision</div>
+      </div>
+      <div class="api-opt" onclick="selectAPI('openrouter')" id="opt-openrouter">
+        <div style="font-size:20px;margin-bottom:4px">🔵</div>
+        <div class="name">OpenRouter</div>
+        <div class="desc">Multi-Model</div>
+      </div>
+      <div class="api-opt" onclick="selectAPI('gemini')" id="opt-gemini">
+        <div style="font-size:20px;margin-bottom:4px">🔴</div>
+        <div class="name">Gemini</div>
+        <div class="desc">Gemini 2.0 Flash</div>
+      </div>
+    </div>
 
+    <!-- API Key Input -->
+    <div class="field">
+      <label id="apiKeyLabel">API Key</label>
+      <div style="display:flex;gap:8px">
+        <input type="password" id="apiKey" placeholder="ใส่ API Key ที่นี่..." style="flex:1">
+        <button class="btn btn-sm btn-blue" onclick="toggleShowKey()">👁️</button>
+        <button class="btn btn-sm btn-green" onclick="testAPIKey()">🧪 ทดสอบ</button>
+      </div>
+      <div id="apiKeyHint" style="font-size:11px;color:var(--muted);margin-top:4px"></div>
+    </div>
 
+    <!-- OpenRouter Model Selection (only shown for OpenRouter) -->
+    <div id="openrouterModelSection" class="hidden">
+      <div class="field">
+        <label>เลือก Model (OpenRouter)</label>
+        <select id="openrouterModel">
+          <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash (Free)</option>
+          <option value="openai/gpt-4o">GPT-4o</option>
+          <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
+          <option value="anthropic/claude-sonnet-4">Claude Sonnet 4</option>
+          <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+          <option value="google/gemini-pro-vision">Gemini Pro Vision</option>
+          <option value="meta-llama/llama-3.2-90b-vision-instruct">Llama 3.2 90B Vision</option>
+          <option value="qwen/qwen2.5-vl-72b-instruct">Qwen 2.5 VL 72B</option>
+        </select>
+      </div>
+    </div>
 
+    <!-- Gemini Model Selection -->
+    <div id="geminiModelSection" class="hidden">
+      <div class="field">
+        <label>เลือก Model (Gemini)</label>
+        <select id="geminiModel">
+          <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+          <option value="gemini-2.0-flash-lite">Gemini 2.0 Flash Lite</option>
+          <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+          <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+        </select>
+      </div>
+    </div>
 
+    <!-- Test Result -->
+    <div id="apiTestResult" class="hidden mt8"></div>
+  </div>
 
+  <!-- Provider Info Cards -->
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+    <div class="panel">
+      <h2 style="font-size:13px">🟢 OpenAI</h2>
+      <div style="font-size:11px;color:var(--muted)">
+        <p>Model: <strong>GPT-4o</strong></p>
+        <p>Key format: <code>sk-...</code></p>
+        <p>สมัครได้ที่: <a href="https://platform.openai.com/api-keys" target="_blank" class="amazon-link" style="font-size:11px">platform.openai.com</a></p>
+        <p style="margin-top:4px">Vision ดี, Keywords แม่นยำ, ราคาปานกลาง</p>
+      </div>
+    </div>
+    <div class="panel">
+      <h2 style="font-size:13px">🟠 Claude (Anthropic)</h2>
+      <div style="font-size:11px;color:var(--muted)">
+        <p>Model: <strong>Claude Sonnet 4</strong></p>
+        <p>Key format: <code>sk-ant-...</code></p>
+        <p>สมัครได้ที่: <a href="https://console.anthropic.com/" target="_blank" class="amazon-link" style="font-size:11px">console.anthropic.com</a></p>
+        <p style="margin-top:4px">วิเคราะห์รูปละเอียด, Safety check ดี</p>
+      </div>
+    </div>
+    <div class="panel">
+      <h2 style="font-size:13px">🔵 OpenRouter</h2>
+      <div style="font-size:11px;color:var(--muted)">
+        <p>Model: <strong>เลือกได้หลาย model</strong></p>
+        <p>Key format: <code>sk-or-...</code></p>
+        <p>สมัครได้ที่: <a href="https://openrouter.ai/keys" target="_blank" class="amazon-link" style="font-size:11px">openrouter.ai</a></p>
+        <p style="margin-top:4px">ใช้หลาย model ได้, มี free tier, คุ้มค่า</p>
+      </div>
+    </div>
+    <div class="panel">
+      <h2 style="font-size:13px">🔴 Google Gemini</h2>
+      <div style="font-size:11px;color:var(--muted)">
+        <p>Model: <strong>Gemini 2.0 Flash</strong></p>
+        <p>Key format: <code>AIza...</code></p>
+        <p>สมัครได้ที่: <a href="https://aistudio.google.com/apikey" target="_blank" class="amazon-link" style="font-size:11px">aistudio.google.com</a></p>
+        <p style="margin-top:4px">ฟรี quota สูง, เร็ว, วิเคราะห์สีดี</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
 
+<!-- ======================== TAB: REJECTED DB ======================== -->
+<div id="tab-rejected" class="tab-content">
+<div class="container" style="max-width:900px">
+  <div class="panel">
+    <h2>🚫 Rejected Keywords Database</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px">เก็บ keyword ที่ถูก Amazon reject ไว้ เพื่อไม่ให้ระบบสร้างซ้ำอีก</p>
 
- = `<span class="season-badge">🎄 ${r.detectedSeason}</span> ` + kwHTML;
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <input type="text" id="rejectedInput" placeholder="Keyword ที่ถูก reject..." style="flex:2">
+      <input type="text" id="rejectedReason" placeholder="เหตุผล..." style="flex:1">
+      <button class="btn btn-primary" onclick="addRejected()">+ เพิ่ม</button>
+    </div>
+
+    <div class="flex-between mb8">
+      <input type="text" class="db-search" id="rejectedSearch" placeholder="🔍 ค้นหา..." style="width:250px" oninput="renderRejectedDB()">
+      <div class="flex-gap">
+        <button class="btn btn-sm btn-blue" onclick="exportDB('rejected')">📤 Export JSON</button>
+        <button class="btn btn-sm btn-green" onclick="importDB('rejected')">📥 Import JSON</button>
+        <span style="font-size:11px;color:var(--muted)" id="rejectedCount">0 รายการ</span>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="max-height:500px">
+      <table class="db-table">
+        <thead>
+          <tr>
+            <th style="width:30px">#</th>
+            <th>Keyword</th>
+            <th style="width:150px">เหตุผล</th>
+            <th style="width:100px">วันที่</th>
+            <th style="width:70px">แหล่งที่มา</th>
+            <th style="width:40px"></th>
+          </tr>
+        </thead>
+        <tbody id="rejectedBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ======================== TAB: SEASONAL DB ======================== -->
+<div id="tab-seasonal" class="tab-content">
+<div class="container" style="max-width:1000px">
+  <div class="panel">
+    <h2>🎄 Seasonal Keywords Database</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px">keyword เทศกาลที่จะถูกเพิ่มอัตโนมัติเมื่อ AI ตรวจจับว่ารูปเป็นธีมเทศกาล</p>
+
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <select id="seasonSelect" style="width:180px" onchange="renderSeasonalDB()">
+        <option value="">-- เลือกเทศกาล --</option>
+      </select>
+      <input type="text" id="seasonKWInput" placeholder="เพิ่ม keyword เทศกาล..." style="flex:1">
+      <button class="btn btn-primary" onclick="addSeasonalKW()">+ เพิ่ม Keyword</button>
+      <button class="btn btn-green" onclick="addNewSeason()">+ เทศกาลใหม่</button>
+    </div>
+
+    <div class="flex-between mb8">
+      <div class="flex-gap">
+        <button class="btn btn-sm btn-blue" onclick="exportDB('seasonal')">📤 Export</button>
+        <button class="btn btn-sm btn-green" onclick="importDB('seasonal')">📥 Import</button>
+      </div>
+    </div>
+
+    <div id="seasonalContent"></div>
+  </div>
+</div>
+</div>
+
+<!-- ======================== TAB: TRADEMARK DB ======================== -->
+<div id="tab-trademark" class="tab-content">
+<div class="container" style="max-width:900px">
+  <div class="panel">
+    <h2>™️ Trademark / Copyright Database</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px">คำที่มีลิขสิทธิ์/เครื่องหมายการค้า ระบบจะกรองออกอัตโนมัติ</p>
+
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <input type="text" id="tmInput" placeholder="คำ Trademark..." style="flex:2">
+      <select id="tmCategory" style="width:150px">
+        <option value="brand">Brand</option>
+        <option value="character">Character</option>
+        <option value="slogan">Slogan</option>
+        <option value="sports">Sports Team</option>
+        <option value="celebrity">Celebrity</option>
+        <option value="other">Other</option>
+      </select>
+      <button class="btn btn-primary" onclick="addTrademark()">+ เพิ่ม</button>
+    </div>
+
+    <div class="flex-between mb8">
+      <input type="text" id="tmSearch" placeholder="🔍 ค้นหา..." style="width:250px" oninput="renderTrademarkDB()">
+      <div class="flex-gap">
+        <button class="btn btn-sm btn-blue" onclick="exportDB('trademark')">📤 Export</button>
+        <button class="btn btn-sm btn-green" onclick="importDB('trademark')">📥 Import</button>
+        <span style="font-size:11px;color:var(--muted)" id="tmCount">0 รายการ</span>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="max-height:500px">
+      <table class="db-table">
+        <thead>
+          <tr>
+            <th style="width:30px">#</th>
+            <th>คำ Trademark</th>
+            <th style="width:120px">หมวดหมู่</th>
+            <th style="width:100px">วันที่</th>
+            <th style="width:40px"></th>
+          </tr>
+        </thead>
+        <tbody id="tmBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ======================== TAB: HISTORY ======================== -->
+<div id="tab-history" class="tab-content">
+<div class="container" style="max-width:1200px">
+  <div class="panel">
+    <h2>📜 ประวัติการทำงาน</h2>
+    <div class="flex-between mb8">
+      <input type="text" id="historySearch" placeholder="🔍 ค้นหา Title, Keyword..." style="width:300px" oninput="renderHistoryDB()">
+      <div class="flex-gap">
+        <button class="btn btn-sm btn-blue" onclick="exportDB('history')">📤 Export</button>
+        <button class="btn btn-sm btn-red" onclick="clearHistory()">🗑️ ล้างประวัติ</button>
+        <span style="font-size:11px;color:var(--muted)" id="historyCount">0 รายการ</span>
+      </div>
+    </div>
+    <div class="table-wrap" style="max-height:500px">
+      <table class="db-table">
+        <thead>
+          <tr>
+            <th style="width:30px">#</th>
+            <th style="width:100px">วันที่</th>
+            <th style="width:120px">รูป</th>
+            <th>Title</th>
+            <th style="width:80px">Type</th>
+            <th style="width:80px">Keywords</th>
+            <th style="width:80px">Colors</th>
+            <th style="width:60px">สถานะ</th>
+          </tr>
+        </thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ======================== TAB: SETTINGS ======================== -->
+<div id="tab-settings" class="tab-content">
+<div class="container" style="max-width:700px">
+  <!-- Supabase Cloud Database -->
+  <div class="panel">
+    <h2>☁️ Supabase Cloud Database</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px">เชื่อมต่อ Supabase เพื่อเก็บข้อมูลบน Cloud (sync ข้ามอุปกรณ์)</p>
+    <div class="field">
+      <label>Supabase URL</label>
+      <input type="text" id="supabaseUrl" placeholder="https://xxxxx.supabase.co" value="https://upppgioaitbplxinkvga.supabase.co">
+    </div>
+    <div class="field">
+      <label>Supabase Anon Key</label>
+      <div style="display:flex;gap:8px">
+        <input type="password" id="supabaseKey" placeholder="eyJhbGciOi..." style="flex:1">
+        <button class="btn btn-sm btn-blue" onclick="document.getElementById('supabaseKey').type=document.getElementById('supabaseKey').type==='password'?'text':'password'">👁️</button>
+      </div>
+    </div>
+    <div class="flex-gap mt8">
+      <button class="btn btn-primary" onclick="connectSupabase()">🔗 เชื่อมต่อ Supabase</button>
+      <button class="btn btn-green" onclick="pushToSupabase()">📤 Push ข้อมูลไป Cloud</button>
+      <button class="btn btn-blue" onclick="pullFromSupabase()">📥 Pull จาก Cloud</button>
+    </div>
+    <div id="supabaseStatus" class="mt8"></div>
+  </div>
+
+  <!-- GitHub -->
+  <div class="panel">
+    <h2>🐙 GitHub Sync</h2>
+    <div class="field">
+      <label>GitHub Personal Access Token</label>
+      <input type="password" id="ghToken" placeholder="ghp_...">
+    </div>
+    <div class="field">
+      <label>GitHub Repository (format: username/repo)</label>
+      <input type="text" id="ghRepo" placeholder="username/merch-keywords" value="jantapadmool-bit/AmazonMerch">
+    </div>
+    <div class="flex-gap mt8">
+      <button class="btn btn-primary" onclick="syncToGitHub()">📤 Push to GitHub</button>
+      <button class="btn btn-blue" onclick="pullFromGitHub()">📥 Pull from GitHub</button>
+    </div>
+  </div>
+
+  <!-- Local Data -->
+  <div class="panel">
+    <h2>💾 ข้อมูลในเครื่อง</h2>
+    <div class="stats-bar">
+      <div class="stat-item">Rejected: <span class="stat-num" id="setRejCount">0</span></div>
+      <div class="stat-item">Seasonal: <span class="stat-num" id="setSeaCount">0</span></div>
+      <div class="stat-item">Trademark: <span class="stat-num" id="setTMCount">0</span></div>
+      <div class="stat-item">History: <span class="stat-num" id="setHistCount">0</span></div>
+    </div>
+    <div class="flex-gap mt8">
+      <button class="btn btn-blue" onclick="exportAllDB()">📤 Export All (JSON)</button>
+      <button class="btn btn-green" onclick="importAllDB()">📥 Import All (JSON)</button>
+      <button class="btn btn-red" onclick="resetAllDB()">🗑️ Reset ทั้งหมด</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Image Preview Modal -->
+<div id="previewModal" class="modal-overlay hidden" onclick="this.classList.add('hidden')">
+  <img id="previewImg" src="" style="max-width:90%;max-height:90%;border-radius:8px">
+</div>
+
+<!-- Hidden file input for import -->
+<input type="file" id="importFileInput" accept=".json" style="display:none">
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+let selectedAPI = 'openai';
+let uploadedImages = [];
+let results = [];
+
+// ============================================================
+// ALL 34 COLORS
+// ============================================================
+const ALL_COLORS = [
+  'Asphalt Grey','Baby Blue','Black','Brown','Cranberry Red',
+  'Dark Heather Grey','Grass Green','Heather Blue','Heather Grey','Kelly Green',
+  'Lemon Yellow','Navy Blue','Olive','Orange','Pink',
+  'Purple','Red','Royal Blue','Silver Grey','Slate Grey',
+  'White','Dark Green','Burgundy','Golden Yellow','Purple Heather',
+  'Red Heather','Olive Heather','Pink Heather','Sapphire Blue','Ivory',
+  'Light Beige','Light Pink','Light Purple','Mint Green'
+];
+
+const LIGHT_COLORS = ['Baby Blue','Heather Grey','Lemon Yellow','Pink','Silver Grey','White','Golden Yellow','Pink Heather','Ivory','Light Beige','Light Pink','Light Purple','Mint Green'];
+const DARK_COLORS = ['Asphalt Grey','Black','Brown','Cranberry Red','Dark Heather Grey','Navy Blue','Olive','Purple','Slate Grey','Dark Green','Burgundy','Sapphire Blue'];
+const MEDIUM_COLORS = ['Grass Green','Heather Blue','Kelly Green','Orange','Red','Royal Blue','Purple Heather','Red Heather','Olive Heather'];
+
+// ============================================================
+// DATABASE LAYER (localStorage)
+// ============================================================
+const DB = {
+  get(key, def=[]) { try { return JSON.parse(localStorage.getItem('merch_'+key)) || def; } catch(e) { return def; } },
+  set(key, val) { localStorage.setItem('merch_'+key, JSON.stringify(val)); },
+
+  getRejected() { return this.get('rejected', []); },
+  setRejected(v) { this.set('rejected', v); },
+
+  getSeasonal() { return this.get('seasonal', this.defaultSeasonal()); },
+  setSeasonal(v) { this.set('seasonal', v); },
+
+  getTrademark() { return this.get('trademark', this.defaultTrademark()); },
+  setTrademark(v) { this.set('trademark', v); },
+
+  getHistory() { return this.get('history', []); },
+  setHistory(v) { this.set('history', v); },
+
+  getSettings() { return this.get('settings', { bp1:true, bp2:true, desc:false, brand:'', api:'openai', apiKey:'' }); },
+  setSettings(v) { this.set('settings', v); },
+
+  defaultSeasonal() {
+    return [
+      { id:'s1', season:"Valentine's Day", keywords:["Valentine Gift T-Shirt","Love T-Shirt","Couples T-Shirt","Valentines Day T-Shirt","Heart T-Shirt","Be My Valentine T-Shirt"], activeMonths:[1,2] },
+      { id:'s2', season:"St. Patrick's Day", keywords:["St Patricks Day T-Shirt","Irish T-Shirt","Shamrock T-Shirt","Lucky T-Shirt","Green Clover T-Shirt"], activeMonths:[2,3] },
+      { id:'s3', season:"Easter", keywords:["Easter T-Shirt","Easter Bunny T-Shirt","Happy Easter T-Shirt","Easter Egg T-Shirt","Easter Basket T-Shirt"], activeMonths:[3,4] },
+      { id:'s4', season:"Mother's Day", keywords:["Mom T-Shirt","Best Mom T-Shirt","Mothers Day T-Shirt","Mom Life T-Shirt","Mama T-Shirt"], activeMonths:[4,5] },
+      { id:'s5', season:"Father's Day", keywords:["Dad T-Shirt","Best Dad T-Shirt","Fathers Day T-Shirt","Dad Joke T-Shirt","Papa T-Shirt"], activeMonths:[5,6] },
+      { id:'s6', season:"4th of July", keywords:["4th Of July T-Shirt","Patriotic T-Shirt","American Flag T-Shirt","USA T-Shirt","Independence Day T-Shirt","Merica T-Shirt"], activeMonths:[6,7] },
+      { id:'s7', season:"Halloween", keywords:["Halloween T-Shirt","Spooky T-Shirt","Trick Or Treat T-Shirt","Witch T-Shirt","Pumpkin T-Shirt","Scary T-Shirt","Ghost T-Shirt"], activeMonths:[8,9,10] },
+      { id:'s8', season:"Thanksgiving", keywords:["Thanksgiving T-Shirt","Thankful T-Shirt","Turkey T-Shirt","Grateful T-Shirt","Fall T-Shirt"], activeMonths:[10,11] },
+      { id:'s9', season:"Christmas", keywords:["Christmas T-Shirt","Merry Christmas T-Shirt","Santa T-Shirt","Xmas T-Shirt","Holiday T-Shirt","Ugly Christmas T-Shirt"], activeMonths:[10,11,12] },
+      { id:'s10', season:"New Year", keywords:["New Year T-Shirt","Happy New Year T-Shirt","New Years Eve T-Shirt","2026 T-Shirt","Cheers T-Shirt"], activeMonths:[11,12,1] }
+    ];
+  },
+
+  defaultTrademark() {
+    return [
+      "Disney","Marvel","DC Comics","Star Wars","Pokemon","Nintendo","Mickey Mouse","Spider-Man","Batman","Superman",
+      "Hello Kitty","Sanrio","Nike","Adidas","Puma","Reebok","Under Armour","Gucci","Louis Vuitton","Chanel",
+      "Coca-Cola","Pepsi","McDonald's","Starbucks","Apple","Google","Amazon","Microsoft","Netflix","Tesla",
+      "Ferrari","Lamborghini","Porsche","BMW","Mercedes","Audi","Toyota","Honda","Ford","Chevrolet",
+      "NFL","NBA","MLB","NHL","FIFA","UFC","WWE","Olympics","Super Bowl",
+      "Harry Potter","Lord of the Rings","Game of Thrones","Stranger Things","The Simpsons","Family Guy","South Park",
+      "Mario","Luigi","Zelda","Pikachu","Sonic","Minecraft","Fortnite","Roblox","Call of Duty",
+      "Barbie","LEGO","Hot Wheels","Transformers","Power Rangers","Teenage Mutant Ninja Turtles",
+      "Just Do It","I'm Lovin' It","Think Different","Have a Break","Red Bull",
+      "Taylor Swift","BTS","Beyonce","Drake","Eminem","Michael Jackson","Elvis Presley",
+      "Winnie the Pooh","Frozen","Elsa","Moana","Lion King","Toy Story","Finding Nemo",
+      "Peppa Pig","Paw Patrol","Bluey","Cocomelon","Baby Shark",
+      "Supreme","Off-White","Balenciaga","Versace","Prada","Dior","Hermes","Fendi","Burberry",
+      "Playboy","Hustler","Hooters","Jack Daniels","Budweiser","Corona","Heineken","Johnnie Walker",
+      "Dallas Cowboys","New York Yankees","Los Angeles Lakers","Manchester United","Real Madrid","Barcelona",
+      "Tom and Jerry","Scooby Doo","Looney Tunes","Bugs Bunny","Tweety","SpongeBob","Dora the Explorer",
+      "NASA","FBI","CIA","US Army","Marines","Air Force","Navy","USMC"
+    ].map((t,i) => ({ id:'tm_'+i, term:t, category:'brand', dateAdded:new Date().toISOString().slice(0,10) }));
+  }
+};
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  loadToggles();
+  renderImages();
+  renderRejectedDB();
+  renderSeasonalDB();
+  renderTrademarkDB();
+  renderHistoryDB();
+  updateSettingsStats();
+  populateSeasonSelect();
+
+  // Load saved settings
+  const s = DB.getSettings();
+  if(s.brand) document.getElementById('brandName').value = s.brand;
+  if(s.apiKey) document.getElementById('apiKey').value = s.apiKey;
+  if(s.api) { selectedAPI = s.api; selectAPI(s.api); }
+  updateAPIStatus();
+}
+
+// ============================================================
+// TAB NAVIGATION
+// ============================================================
+function switchTab(tab) {
+  document.querySelectorAll('.main-tab').forEach((el,i) => {
+    const tabs = ['generator','apiconfig','rejected','seasonal','trademark','history','settings'];
+    el.classList.toggle('active', tabs[i] === tab);
+  });
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+}
+
+// ============================================================
+// API SELECTION
+// ============================================================
+function selectAPI(api) {
+  selectedAPI = api;
+  document.querySelectorAll('.api-opt').forEach(el => el.classList.remove('active'));
+  document.getElementById('opt-'+api).classList.add('active');
+  const s = DB.getSettings(); s.api = api; DB.setSettings(s);
+
+  // Show/hide model sections
+  document.getElementById('openrouterModelSection').classList.toggle('hidden', api !== 'openrouter');
+  document.getElementById('geminiModelSection').classList.toggle('hidden', api !== 'gemini');
+
+  // Update hint text
+  const hints = {
+    openai: 'Format: sk-... (สมัครที่ platform.openai.com)',
+    claude: 'Format: sk-ant-... (สมัครที่ console.anthropic.com)',
+    openrouter: 'Format: sk-or-... (สมัครที่ openrouter.ai/keys)',
+    gemini: 'Format: AIza... (สมัครที่ aistudio.google.com/apikey)'
+  };
+  const labels = {
+    openai: 'OpenAI API Key',
+    claude: 'Anthropic (Claude) API Key',
+    openrouter: 'OpenRouter API Key',
+    gemini: 'Google Gemini API Key'
+  };
+  const hintEl = document.getElementById('apiKeyHint');
+  const labelEl = document.getElementById('apiKeyLabel');
+  if(hintEl) hintEl.textContent = hints[api] || '';
+  if(labelEl) labelEl.textContent = labels[api] || 'API Key';
+
+  updateAPIStatus();
+}
+
+function toggleShowKey() {
+  const input = document.getElementById('apiKey');
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+async function testAPIKey() {
+  const key = document.getElementById('apiKey').value;
+  if(!key) { showAPITestResult('❌ กรุณาใส่ API Key ก่อน','error'); return; }
+  showAPITestResult('<span class="spinner"></span> กำลังทดสอบ...','info');
+  try {
+    if(selectedAPI === 'openai') {
+      const r = await fetch('https://api.openai.com/v1/models', {headers:{'Authorization':'Bearer '+key}});
+      if(r.ok) showAPITestResult('✅ OpenAI API Key ใช้งานได้!','success');
+      else throw new Error('Invalid key ('+r.status+')');
+    } else if(selectedAPI === 'claude') {
+      // Just check format
+      if(key.startsWith('sk-ant-')) showAPITestResult('✅ Format ถูกต้อง (จะทดสอบจริงตอนใช้งาน)','success');
+      else showAPITestResult('⚠️ Claude key ควรเริ่มด้วย sk-ant-','error');
+    } else if(selectedAPI === 'openrouter') {
+      const r = await fetch('https://openrouter.ai/api/v1/auth/key',{headers:{'Authorization':'Bearer '+key}});
+      if(r.ok) { const d = await r.json(); showAPITestResult('✅ OpenRouter OK! Credit: $'+(d.data?.limit_remaining||'N/A'),'success'); }
+      else throw new Error('Invalid key');
+    } else if(selectedAPI === 'gemini') {
+      const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models?key='+key);
+      if(r.ok) showAPITestResult('✅ Gemini API Key ใช้งานได้!','success');
+      else throw new Error('Invalid key ('+r.status+')');
+    }
+  } catch(e) { showAPITestResult('❌ ทดสอบไม่ผ่าน: '+e.message,'error'); }
+}
+
+function showAPITestResult(msg, type) {
+  const el = document.getElementById('apiTestResult');
+  el.classList.remove('hidden');
+  el.innerHTML = `<div class="status-box status-${type}">${msg}</div>`;
+  if(type!=='info') setTimeout(()=>el.classList.add('hidden'), 5000);
+}
+
+function updateAPIStatus() {
+  const key = document.getElementById('apiKey')?.value;
+  const providerNames = {openai:'OpenAI GPT-4o',claude:'Claude Sonnet 4',openrouter:'OpenRouter',gemini:'Gemini 2.0 Flash'};
+  // Update mini status in Generator tab
+  const miniProv = document.getElementById('apiMiniProvider');
+  if(miniProv) {
+    if(key) {
+      miniProv.innerHTML = `AI: <strong style="color:var(--green)">${providerNames[selectedAPI]||selectedAPI}</strong> ✅`;
+    } else {
+      miniProv.innerHTML = `AI: <strong style="color:var(--red)">ยังไม่ได้ตั้งค่า</strong>`;
+    }
+  }
+}
+
+// ============================================================
+// TOGGLES
+// ============================================================
+function saveToggles() {
+  const s = DB.getSettings();
+  s.bp1 = document.getElementById('toggleBP1').checked;
+  s.bp2 = document.getElementById('toggleBP2').checked;
+  s.desc = document.getElementById('toggleDesc').checked;
+  DB.setSettings(s);
+}
+function loadToggles() {
+  const s = DB.getSettings();
+  document.getElementById('toggleBP1').checked = s.bp1 !== false;
+  document.getElementById('toggleBP2').checked = s.bp2 !== false;
+  document.getElementById('toggleDesc').checked = s.desc === true;
+}
+
+// ============================================================
+// BRAND INPUT
+// ============================================================
+document.getElementById('brandName').addEventListener('input', function() {
+  const len = this.value.length;
+  const el = document.getElementById('brandCount');
+  el.textContent = len + '/50';
+  el.className = 'char-count ' + (len > 50 ? 'char-over' : 'char-ok');
+  const s = DB.getSettings(); s.brand = this.value; DB.setSettings(s);
+});
+
+// ============================================================
+// IMAGE HANDLING
+// ============================================================
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  Array.from(e.target.files).forEach(f => {
+    if(!f.type.startsWith('image/')) return;
+    uploadedImages.push({ file:f, url:URL.createObjectURL(f), name:f.name, selected:true });
+  });
+  renderImages();
+});
+
+function renderImages() {
+  const grid = document.getElementById('imagesGrid');
+  grid.innerHTML = '';
+  uploadedImages.forEach((img,i) => {
+    const div = document.createElement('div');
+    div.className = 'img-thumb' + (img.selected ? ' selected' : '');
+    div.innerHTML = `<img src="${img.url}" onclick="event.stopPropagation();previewImage('${img.url}')"><div class="check">✓</div><div class="fname">${img.name}</div>`;
+    div.onclick = () => { img.selected = !img.selected; renderImages(); };
+    grid.appendChild(div);
+  });
+  const sel = uploadedImages.filter(i => i.selected).length;
+  document.getElementById('imgCount').textContent = sel ? `${sel}/${uploadedImages.length} รูปถูกเลือก` : 'ยังไม่ได้เลือกรูป';
+  document.getElementById('btnGenerate').disabled = sel === 0 || !document.getElementById('apiKey').value;
+}
+function selectAllImages() { uploadedImages.forEach(i => i.selected = true); renderImages(); }
+function deselectAllImages() { uploadedImages.forEach(i => i.selected = false); renderImages(); }
+function previewImage(url) {
+  document.getElementById('previewImg').src = url;
+  document.getElementById('previewModal').classList.remove('hidden');
+}
+document.getElementById('apiKey').addEventListener('input', function() {
+  renderImages();
+  updateAPIStatus();
+  // Save key to settings
+  const s = DB.getSettings(); s.apiKey = this.value; DB.setSettings(s);
+});
+
+// ============================================================
+// IMAGE TO BASE64
+// ============================================================
+function imageToBase64(file) {
+  return new Promise(r => { const rd = new FileReader(); rd.onload = () => r(rd.result.split(',')[1]); rd.readAsDataURL(file); });
+}
+
+// ============================================================
+// AI ANALYSIS (Multi-task: Keywords, Safety, Color, Content)
+// ============================================================
+async function analyzeImage(file) {
+  const apiKey = document.getElementById('apiKey').value;
+  const base64 = await imageToBase64(file);
+  const mime = file.type || 'image/png';
+  const bp1On = document.getElementById('toggleBP1').checked;
+  const bp2On = document.getElementById('toggleBP2').checked;
+  const descOn = document.getElementById('toggleDesc').checked;
+
+  const colorList = ALL_COLORS.join(', ');
+  const lightList = LIGHT_COLORS.join(', ');
+  const darkList = DARK_COLORS.join(', ');
+
+  const prompt = `You are an expert Amazon Merch on Demand keyword researcher and product listing specialist.
+
+Analyze this t-shirt design image and perform ALL of the following tasks:
+
+## TASK A: SEO Keywords
+- Generate 8-12 keyword phrases that real Amazon customers search for
+- Each keyword MUST end with "T-Shirt"
+- Mix broad + niche keywords
+- Detect if design relates to a seasonal theme (Valentine's Day, Easter, Halloween, Christmas, etc.)
+- Generate a Title (max 60 characters) using the best keyword
+
+## TASK B: Content Safety Check
+Analyze the design for restricted content:
+- Sexual content or suggestive imagery
+- Drug references (including cannabis/marijuana/weed)
+- Alcohol/intoxicating beverages
+- Violence of any kind
+- Weapons: knives, guns, crossbows, sharp objects, or anything suggesting violence
+
+If ANY restricted content is found: type = "man, woman"
+If NO restricted content: type = "man, woman, youth, girls"
+
+## TASK C: Design Color Analysis
+Analyze the main color of text/graphics in the design:
+- If design elements are BLACK/dark colored → recommend LIGHT shirt colors: ${lightList}
+- If design elements are WHITE/light colored → recommend DARK shirt colors: ${darkList}
+- If mixed → recommend both appropriate light and dark colors
+- Choose from ONLY these 34 colors: ${colorList}
+- Select as many appropriate colors as possible (more = better for sales)
+
+## TASK D: Content Generation
+${bp1On ? '- Generate Bullet Point 1 (max 250 chars): A compelling product feature description using top keywords' : '- Skip Bullet Point 1'}
+${bp2On ? '- Generate Bullet Point 2 (max 250 chars): Another feature/benefit using remaining keywords' : '- Skip Bullet Point 2'}
+${descOn ? '- Generate Description (max 2000 chars): Full product description with all valid keywords naturally woven in' : '- Skip Description'}
+
+## IMPORTANT: Return ONLY valid JSON in this exact format:
+{
+  "keywords": ["keyword1 T-Shirt", "keyword2 T-Shirt"],
+  "suggestedTitle": "Best Keyword Title Here T-Shirt",
+  "detectedSeason": "Easter" or null,
+  "contentSafety": {
+    "isSafe": true,
+    "flags": [],
+    "type": "man, woman, youth, girls"
+  },
+  "designColor": {
+    "mainColor": "dark",
+    "recommendedColors": ["White", "Baby Blue", "Pink"]
+  },
+  "bulletPoint1": "..." or "",
+  "bulletPoint2": "..." or "",
+  "description": "..." or ""
+}`;
+
+  if(selectedAPI === 'openai') {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
+      body:JSON.stringify({
+        model:'gpt-4o',
+        messages:[
+          {role:'system',content:'You are an expert Amazon Merch on Demand analyst. Always respond with valid JSON only.'},
+          {role:'user',content:[
+            {type:'text',text:prompt},
+            {type:'image_url',image_url:{url:'data:'+mime+';base64,'+base64}}
+          ]}
+        ],
+        max_tokens:2000,
+        temperature:0.7
+      })
+    });
+    const data = await res.json();
+    if(data.error) throw new Error(data.error.message);
+    return parseAIResponse(data.choices[0].message.content);
+
+  } else if(selectedAPI === 'claude') {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':apiKey,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:2000,
+        messages:[{role:'user',content:[
+          {type:'image',source:{type:'base64',media_type:mime,data:base64}},
+          {type:'text',text:prompt}
+        ]}]
+      })
+    });
+    const data = await res.json();
+    if(data.error) throw new Error(data.error.message);
+    return parseAIResponse(data.content[0].text);
+
+  } else if(selectedAPI === 'openrouter') {
+    const model = document.getElementById('openrouterModel')?.value || 'google/gemini-2.0-flash-exp:free';
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer '+apiKey,
+        'HTTP-Referer':'https://merch-keyword-generator.app',
+        'X-Title':'Amazon Merch Keyword Generator'
+      },
+      body:JSON.stringify({
+        model: model,
+        messages:[
+          {role:'system',content:'You are an expert Amazon Merch on Demand analyst. Always respond with valid JSON only.'},
+          {role:'user',content:[
+            {type:'text',text:prompt},
+            {type:'image_url',image_url:{url:'data:'+mime+';base64,'+base64}}
+          ]}
+        ],
+        max_tokens:2000,
+        temperature:0.7
+      })
+    });
+    const data = await res.json();
+    if(data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+    return parseAIResponse(data.choices[0].message.content);
+
+  } else if(selectedAPI === 'gemini') {
+    const model = document.getElementById('geminiModel')?.value || 'gemini-2.0-flash';
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        contents:[{
+          parts:[
+            {inlineData:{mimeType:mime,data:base64}},
+            {text:prompt}
+          ]
+        }],
+        generationConfig:{
+          temperature:0.7,
+          maxOutputTokens:2000,
+          responseMimeType:'application/json'
+        }
+      })
+    });
+    const data = await res.json();
+    if(data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if(!text) throw new Error('Gemini: ไม่ได้รับผลลัพธ์');
+    return parseAIResponse(text);
+  }
+}
+
+function parseAIResponse(content) {
+  const jsonMatch = content.match(/\{[\s\S]*\}/);
+  if(jsonMatch) {
+    try {
+      const parsed = JSON.parse(jsonMatch[0]);
+      return {
+        keywords: parsed.keywords || [],
+        suggestedTitle: parsed.suggestedTitle || '',
+        detectedSeason: parsed.detectedSeason || null,
+        contentSafety: parsed.contentSafety || { isSafe:true, flags:[], type:'man, woman, youth, girls' },
+        designColor: parsed.designColor || { mainColor:'dark', recommendedColors:['White','Black'] },
+        bulletPoint1: parsed.bulletPoint1 || '',
+        bulletPoint2: parsed.bulletPoint2 || '',
+        description: parsed.description || ''
+      };
+    } catch(e) {}
+  }
+  // Fallback
+  const keywords = [];
+  content.split('\n').forEach(l => {
+    const m = l.match(/["']([^"']*T-Shirt[^"']*)["']/i);
+    if(m) keywords.push(m[1]);
+  });
+  return {
+    keywords,
+    suggestedTitle: keywords[0] || 'T-Shirt Design',
+    detectedSeason: null,
+    contentSafety: { isSafe:true, flags:[], type:'man, woman, youth, girls' },
+    designColor: { mainColor:'dark', recommendedColors:['White','Black'] },
+    bulletPoint1:'', bulletPoint2:'', description:''
+  };
+}
+
+// ============================================================
+// KEYWORD FILTERING (Trademark + Rejected + Duplicate)
+// ============================================================
+function filterKeywords(keywords) {
+  const tm = DB.getTrademark();
+  const rej = DB.getRejected();
+  const hist = DB.getHistory();
+  const filtered = [];
+  const removed = [];
+
+  keywords.forEach(kw => {
+    const kwLower = kw.toLowerCase();
+
+    // Check trademark
+    const tmMatch = tm.find(t => kwLower.includes(t.term.toLowerCase()));
+    if(tmMatch) { removed.push({kw, reason:'TM: '+tmMatch.term}); return; }
+
+    // Check rejected
+    const rejMatch = rej.find(r => kwLower.includes(r.keyword.toLowerCase()) || r.keyword.toLowerCase().includes(kwLower.replace(' t-shirt','')));
+    if(rejMatch) { removed.push({kw, reason:'Rejected: '+rejMatch.keyword}); return; }
+
+    filtered.push(kw);
+  });
+
+  return { filtered, removed };
+}
+
+// ============================================================
+// SEASONAL KEYWORD INJECTION
+// ============================================================
+function injectSeasonalKeywords(keywords, detectedSeason) {
+  if(!detectedSeason) return keywords;
+  const seasonal = DB.getSeasonal();
+  const match = seasonal.find(s => s.season.toLowerCase().includes(detectedSeason.toLowerCase()));
+  if(!match) return keywords;
+
+  const added = [];
+  match.keywords.forEach(sk => {
+    if(!keywords.find(k => k.toLowerCase() === sk.toLowerCase())) {
+      added.push(sk);
+    }
+  });
+  return [...keywords, ...added.slice(0,4)]; // Add up to 4 seasonal keywords
+}
+
+// ============================================================
+// AMAZON 3-TIER VALIDATION
+// ============================================================
+async function validateKeywordAmazon(keyword) {
+  // Tier 1: Exact match
+  const tier1 = await amazonSuggest(keyword);
+  if(tier1.found) return { valid:true, tier:1, keyword:keyword, score:100, suggestions:tier1.suggestions };
+
+  // Tier 2: Synonym search
+  const baseKW = keyword.replace(/\s*T-Shirt$/i, '').trim();
+  const synonyms = generateSynonyms(baseKW);
+
+  for(const syn of synonyms) {
+    const synKW = syn + ' T-Shirt';
+    const tier2 = await amazonSuggest(synKW);
+    if(tier2.found) return { valid:true, tier:2, keyword:synKW, originalKeyword:keyword, score:75, suggestions:tier2.suggestions };
+    await sleep(150);
+  }
+
+  // Tier 3: Amazon suggestion mining
+  const tier3 = await amazonSuggest(baseKW);
+  if(tier3.suggestions && tier3.suggestions.length > 0) {
+    const tshirtSugs = tier3.suggestions.filter(s => /t-?shirt/i.test(s));
+    if(tshirtSugs.length > 0) {
+      const best = tshirtSugs[0];
+      return { valid:true, tier:3, keyword:best, originalKeyword:keyword, score:50, suggestions:tshirtSugs };
+    }
+  }
+
+  return { valid:false, tier:0, keyword:keyword, score:0, suggestions:[] };
+}
+
+async function amazonSuggest(keyword) {
+  try {
+    const url = `https://completion.amazon.com/api/2017/suggestions?mid=ATVPDKIKX0DER&alias=aps&prefix=${encodeURIComponent(keyword)}`;
+    const res = await fetch(url);
+    if(!res.ok) return { found:false, suggestions:[] };
+    const data = await res.json();
+    const suggestions = (data.suggestions || []).map(s => s.value);
+    const found = suggestions.some(s => /t-?shirt/i.test(s));
+    return { found, suggestions:suggestions.slice(0,8) };
+  } catch(e) {
+    return { found:null, suggestions:[], error:'CORS' };
+  }
+}
+
+function generateSynonyms(phrase) {
+  // Simple synonym generation based on common patterns
+  const words = phrase.split(' ');
+  const synonymMap = {
+    'funny':'hilarious,humorous,comic,laughing',
+    'cute':'adorable,kawaii,sweet,lovely',
+    'cool':'awesome,epic,rad,dope',
+    'love':'heart,romance,loving,beloved',
+    'happy':'joyful,cheerful,blessed,glad',
+    'best':'greatest,top,number one,worlds best',
+    'mom':'mama,mother,mommy,mum',
+    'dad':'papa,father,daddy,pop',
+    'cat':'kitten,kitty,feline,cat lover',
+    'dog':'puppy,doggy,canine,dog lover',
+    'retro':'vintage,classic,old school,throwback',
+    'scary':'spooky,creepy,horror,frightening',
+    'beautiful':'gorgeous,stunning,pretty,elegant',
+    'crazy':'wild,insane,mad,bonkers',
+    'angry':'furious,mad,grumpy,fierce',
+    'sad':'melancholy,blue,gloomy,emotional',
+    'smart':'clever,genius,intelligent,brainy',
+    'strong':'powerful,mighty,tough,fierce',
+    'big':'large,huge,giant,massive',
+    'small':'tiny,little,mini,petite'
+  };
+
+  const results = [];
+  words.forEach(w => {
+    const syns = synonymMap[w.toLowerCase()];
+    if(syns) {
+      syns.split(',').forEach(s => {
+        const newPhrase = phrase.replace(new RegExp(w,'i'), s.trim());
+        results.push(newPhrase);
+      });
+    }
+  });
+
+  // Also try just the key phrase without adjectives
+  if(words.length > 1) {
+    results.push(words[words.length-1] + ' lover');
+    results.push(words.join(' ') + ' lover');
+  }
+
+  return results.slice(0,5); // Max 5 synonyms
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function getAmazonSearchURL(kw) {
+  return 'https://www.amazon.com/s?k='+encodeURIComponent(kw)+'&i=fashion';
+}
+
+// ============================================================
+// MAIN GENERATE FUNCTION
+// ============================================================
+async function generateKeywords() {
+  const selected = uploadedImages.filter(i => i.selected);
+  if(!selected.length) return;
+
+  const brand = document.getElementById('brandName').value || 'My Brand';
+
+  document.getElementById('btnGenerate').disabled = true;
+  document.getElementById('progressArea').classList.remove('hidden');
+  document.getElementById('btnExport').disabled = true;
+  document.getElementById('btnClear').disabled = true;
+  document.getElementById('statsBar').classList.remove('hidden');
+
+  results = [];
+  let totalValidKW = 0, totalFilteredKW = 0;
+
+  for(let idx = 0; idx < selected.length; idx++) {
+    const img = selected[idx];
+    const pct = Math.round((idx / selected.length) * 100);
+    document.getElementById('progressFill').style.width = pct+'%';
+    document.getElementById('progressText').textContent = `(${idx+1}/${selected.length}) กำลังวิเคราะห์: ${img.name}`;
+
+    let result = {
+      imageUrl: img.url,
+      imagePath: img.name,
+      title: '',
+      brand: brand.substring(0,50),
+      type: '',
+      keywords: [],
+      validKeywords: [],
+      amazonResults: [],
+      removedKeywords: [],
+      colors: [],
+      designColorType: '',
+      bulletPoint1: '',
+      bulletPoint2: '',
+      description: '',
+      detectedSeason: null,
+      contentSafety: null,
+      status: 'analyzing'
+    };
+    results.push(result);
+    renderResults();
+
+    try {
+      // Step 1: AI Analysis
+      document.getElementById('progressText').textContent = `(${idx+1}/${selected.length}) 🤖 AI กำลังวิเคราะห์รูป...`;
+      const ai = await analyzeImage(img.file);
+
+      result.keywords = ai.keywords || [];
+      result.title = (ai.suggestedTitle || '').substring(0,60);
+      result.detectedSeason = ai.detectedSeason;
+      result.contentSafety = ai.contentSafety;
+      result.type = ai.contentSafety?.type || 'man, woman, youth, girls';
+      result.colors = ai.designColor?.recommendedColors || [];
+      result.designColorType = ai.designColor?.mainColor || 'unknown';
+      result.bulletPoint1 = (ai.bulletPoint1 || '').substring(0,250);
+      result.bulletPoint2 = (ai.bulletPoint2 || '').substring(0,250);
+      result.description = (ai.description || '').substring(0,2000);
+
+      result.status = 'filtering';
+      renderResults();
+
+      // Step 2: Filter keywords
+      document.getElementById('progressText').textContent = `(${idx+1}/${selected.length}) 🔍 กรอง Trademark/Rejected...`;
+      const { filtered, removed } = filterKeywords(result.keywords);
+      result.removedKeywords = removed;
+      totalFilteredKW += removed.length;
+
+      // Step 3: Inject seasonal keywords
+      const withSeasonal = injectSeasonalKeywords(filtered, result.detectedSeason);
+
+      // Step 4: Amazon validation
+      result.status = 'validating';
+      renderResults();
+      result.amazonResults = [];
+      result.validKeywords = [];
+
+      for(let ki = 0; ki < withSeasonal.length; ki++) {
+        const kw = withSeasonal[ki];
+        document.getElementById('progressText').textContent = `(${idx+1}/${selected.length}) 🔎 Amazon check: ${kw} (${ki+1}/${withSeasonal.length})`;
+
+        const amzResult = await validateKeywordAmazon(kw);
+        result.amazonResults.push(amzResult);
+
+        if(amzResult.valid) {
+          result.validKeywords.push(amzResult.keyword);
+        }
+
+        renderResults();
+        await sleep(200);
+      }
+
+      totalValidKW += result.validKeywords.length;
+
+      // Update title if we have valid keywords
+      if(result.validKeywords.length > 0) {
+        const best = result.amazonResults.filter(r=>r.valid).sort((a,b)=>b.score-a.score);
+        if(best.length > 0 && !result.title) {
+          result.title = best[0].keyword.substring(0,60);
+        }
+      }
+
+      result.status = 'done';
+
+      // Save to history
+      const hist = DB.getHistory();
+      hist.unshift({
+        id: 'h_'+Date.now(),
+        title: result.title,
+        imagePath: result.imagePath,
+        dateCreated: new Date().toISOString().slice(0,10),
+        keywords: result.validKeywords,
+        type: result.type,
+        colors: result.colors,
+        season: result.detectedSeason
+      });
+      DB.setHistory(hist.slice(0,500)); // Keep max 500
+
+    } catch(err) {
+      result.status = 'error';
+      result.error = err.message;
+    }
+
+    renderResults();
+
+    // Update stats
+    document.getElementById('statTotal').textContent = results.length;
+    document.getElementById('statDone').textContent = results.filter(r=>r.status==='done').length;
+    document.getElementById('statKW').textContent = totalValidKW;
+    document.getElementById('statFiltered').textContent = totalFilteredKW;
+  }
+
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressText').textContent = `✅ เสร็จสิ้น! ประมวลผล ${selected.length} รูป`;
+  document.getElementById('btnGenerate').disabled = false;
+  document.getElementById('btnExport').disabled = false;
+  document.getElementById('btnClear').disabled = false;
+
+  showStatus('✅ สร้าง Keywords สำเร็จ '+results.length+' รูป (Valid: '+totalValidKW+', Filtered: '+totalFilteredKW+')','success');
+  renderHistoryDB();
+  updateSettingsStats();
+}
+
+// ============================================================
+// RENDER RESULTS TABLE
+// ============================================================
+function renderResults() {
+  const tbody = document.getElementById('resultsBody');
+  if(!results.length) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--muted)">เลือกรูปและกด "สร้าง Keywords" เพื่อเริ่มต้น</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = results.map((r,i) => {
+    // Status badge
+    let statusBadge = '';
+    if(r.status === 'analyzing') statusBadge = '<span class="badge badge-orange"><span class="spinner"></span> AI</span>';
+    else if(r.status === 'filtering') statusBadge = '<span class="badge badge-blue"><span class="spinner"></span> กรอง</span>';
+    else if(r.status === 'validating') statusBadge = '<span class="badge badge-yellow"><span class="spinner"></span> Amazon</span>';
+    else if(r.status === 'done') statusBadge = '<span class="badge badge-green">✓</span>';
+    else statusBadge = '<span class="badge badge-red">✗</span>';
+
+    // Keywords HTML
+    let kwHTML = '';
+    if(r.removedKeywords.length > 0) {
+      kwHTML += r.removedKeywords.map(rk => `<span class="kw-tag invalid" title="${rk.reason}">✗ ${rk.kw}</span>`).join(' ');
+    }
+    if(r.amazonResults.length > 0) {
+      kwHTML += r.amazonResults.map(ar => {
+        if(ar.valid) {
+          const tierLabel = ar.tier===1?'✓':ar.tier===2?'≈':'↯';
+          const cls = ar.tier===1?'valid':ar.tier===2?'replaced':'replaced';
+          const title = ar.originalKeyword ? `เดิม: ${ar.originalKeyword} → ใหม่: ${ar.keyword} (Score:${ar.score})` : `Score: ${ar.score}`;
+          return `<span class="kw-tag ${cls}" title="${title}">${tierLabel} ${ar.keyword}</span><a href="${getAmazonSearchURL(ar.keyword)}" target="_blank" class="amazon-link">🔍</a>`;
+        } else {
+          return `<span class="kw-tag invalid" title="ไม่พบบน Amazon">✗ ${ar.keyword}</span>`;
+        }
+      }).join(' ');
+    } else if(r.keywords.length > 0 && r.status !== 'done') {
+      kwHTML = r.keywords.map(k => `<span class="kw-tag">${k}</span>`).join(' ');
+    }
+
+    // Season badge
+    if(r.detectedSeason) {
+      kwHTML = `<span class="season-badge">🎄 ${r.detectedSeason}</span> ` + kwHTML;
     }
 
     // Type badge
@@ -293,7 +1691,7 @@ function renderSeasonalDB() {
       <div style="max-height:150px;overflow-y:auto">
         ${s.keywords.map(k => `<div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid var(--border)">
           <span style="font-size:12px">${k}</span>
-          <button class="btn btn-sm btn-red" style="padding:2px 6px" onclick="deleteSeasonalKW('${s.id}','${k.replace(/'/g,"\\'")}'">✗</button>
+          <button class="btn btn-sm btn-red" style="padding:2px 6px" onclick="deleteSeasonalKW('${s.id}','${k.replace(/'/g,"\\'")}')">✗</button>
         </div>`).join('')}
         ${s.keywords.length===0?'<div style="color:var(--muted);font-size:12px;padding:8px">ยังไม่มี keywords</div>':''}
       </div>
@@ -464,7 +1862,7 @@ function importAllDB() {
 
 function resetAllDB() {
   if(!confirm('⚠️ ล้างข้อมูลทั้งหมด? (Rejected, Seasonal, Trademark, History)')) return;
-  if(!confirm('แน่ใจ? ข้อมูลจะหายทั้งหมดแล้วไม่สามารถกู้คืนได้')) return;
+  if(!confirm('แน่ใจหรือ? ข้อมูลจะหายทั้งหมดและไม่สามารถกู้คืนได้')) return;
   localStorage.removeItem('merch_rejected');
   localStorage.removeItem('merch_seasonal');
   localStorage.removeItem('merch_trademark');
@@ -590,9 +1988,9 @@ async function initSupabaseTables() {
     const { data, error } = await supabaseClient.from('merch_data').select('id').limit(1);
     if(error && error.code === '42P01') {
       // Table doesn't exist - need to create via SQL editor in Supabase dashboard
-      showSupabaseStatus('⚠️ ตารางmerch_data ยังไม่มี กรุณาสร้างใน Supabase Dashboard:<br><code style="font-size:10px;display:block;margin-top:4px;padding:6px;background:var(--card2);border-radius:4px;white-space:pre-wrap">CREATE TABLE merch_data (\n  id TEXT PRIMARY KEY DEFAULT \'main\',\n  rejected JSONB DEFAULT \'[]\'::jsonb,\n  seasonal JSONB DEFAULT \'[]\'::jsonb,\n  trademark JSONB DEFAULT \'[]\'::jsonb,\n  history JSONB DEFAULT \'[]\'::jsonb,\n  settings JSONB DEFAULT \'{}\'::jsonb,\n  updated_at TIMESTAMPTZ DEFAULT NOW()\n);\nALTER TABLE merch_data ENABLE ROW LEVEL SECURITY;\nCREATE POLICY "Allow anon access" ON merch_data FOR ALL USING (true);</code>','info');
+      showSupabaseStatus('⚠️ ตาราง merch_data ยังไม่มี กรุณาสร้างใน Supabase Dashboard:<br><code style="font-size:10px;display:block;margin-top:4px;padding:6px;background:var(--card2);border-radius:4px;white-space:pre-wrap">CREATE TABLE merch_data (\n  id TEXT PRIMARY KEY DEFAULT \'main\',\n  rejected JSONB DEFAULT \'[]\'::jsonb,\n  seasonal JSONB DEFAULT \'[]\'::jsonb,\n  trademark JSONB DEFAULT \'[]\'::jsonb,\n  history JSONB DEFAULT \'[]\'::jsonb,\n  settings JSONB DEFAULT \'{}\'::jsonb,\n  updated_at TIMESTAMPTZ DEFAULT NOW()\n);\nALTER TABLE merch_data ENABLE ROW LEVEL SECURITY;\nCREATE POLICY "Allow anon access" ON merch_data FOR ALL USING (true);</code>','info');
     } else if(!error) {
-      showSupabaseStatus('✅ เชื่อมต่อสำเร็จ! ตารางmerch_data พร้อมใช้งาน','success');
+      showSupabaseStatus('✅ เชื่อมต่อสำเร็จ! ตาราง merch_data พร้อมใช้งาน','success');
     } else {
       showSupabaseStatus('⚠️ '+error.message,'error');
     }
