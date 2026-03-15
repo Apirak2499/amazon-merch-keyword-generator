@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Amazon Merch Keyword Generator V3</title>
+<title>Amazon Merch Keyword Generator V4</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#FF9900">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Merch Keywords">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
@@ -26,12 +33,12 @@ body { font-family:'Segoe UI',sans-serif; background:var(--bg); color:var(--text
 
 /* Header */
 .header { background:linear-gradient(135deg,#1a1d27,#232733); border-bottom:2px solid var(--primary); padding:12px 24px; display:flex; align-items:center; gap:16px; }
-.header h1 { font-size:18px; color:var(--primary); }
-.header span { color:var(--muted); font-size:12px; }
+.header h1 { font-size:28px; color:var(--primary); }
+.header span { color:var(--muted); font-size:18px; }
 
 /* Tabs */
 .main-tabs { display:flex; gap:2px; padding:8px 24px 0; background:var(--card); border-bottom:1px solid var(--border); overflow-x:auto; }
-.main-tab { padding:10px 18px; border-radius:8px 8px 0 0; background:var(--card2); color:var(--muted); cursor:pointer; font-size:13px; border:1px solid var(--border); border-bottom:none; white-space:nowrap; transition:.2s; }
+.main-tab { padding:14px 28px; border-radius:8px 8px 0 0; background:var(--card2); color:var(--muted); cursor:pointer; font-size:20px; border:1px solid var(--border); border-bottom:none; white-space:nowrap; transition:.2s; }
 .main-tab:hover { color:var(--text); }
 .main-tab.active { background:var(--bg); color:var(--primary); border-color:var(--primary); font-weight:600; }
 .tab-content { display:none; }
@@ -41,54 +48,54 @@ body { font-family:'Segoe UI',sans-serif; background:var(--bg); color:var(--text
 .container { max-width:1500px; margin:0 auto; padding:16px; }
 .grid2 { display:grid; grid-template-columns:360px 1fr; gap:16px; }
 .panel { background:var(--card); border-radius:10px; border:1px solid var(--border); padding:16px; margin-bottom:12px; }
-.panel h2 { font-size:14px; color:var(--primary); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+.panel h2 { font-size:22px; color:var(--primary); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
 
 /* Form */
-label { display:block; font-size:12px; color:var(--muted); margin-bottom:3px; }
-input,select,textarea { width:100%; padding:8px 10px; background:var(--card2); border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:13px; outline:none; }
+label { display:block; font-size:16px; color:var(--muted); margin-bottom:3px; }
+input,select,textarea { width:100%; padding:12px 14px; background:var(--card2); border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:18px; outline:none; }
 input:focus,select:focus,textarea:focus { border-color:var(--primary); }
 .field { margin-bottom:12px; }
 
 /* Buttons */
-.btn { padding:8px 16px; border:none; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:.2s; }
+.btn { padding:12px 24px; border:none; border-radius:6px; font-size:18px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:10px; transition:.2s; }
 .btn-primary { background:var(--primary); color:#000; }
 .btn-primary:hover { background:var(--primary-dark); }
 .btn-green { background:var(--green); color:#000; }
 .btn-blue { background:var(--blue); color:#fff; }
 .btn-red { background:var(--red); color:#fff; }
-.btn-sm { padding:5px 10px; font-size:11px; }
+.btn-sm { padding:8px 16px; font-size:16px; }
 .btn:disabled { opacity:.4; cursor:not-allowed; }
 
 /* Toggle */
 .toggle-row { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); }
 .toggle-row:last-child { border-bottom:none; }
-.toggle-label { font-size:13px; }
-.toggle-label small { color:var(--muted); font-size:11px; }
-.toggle-switch { position:relative; width:44px; height:24px; cursor:pointer; }
+.toggle-label { font-size:18px; }
+.toggle-label small { color:var(--muted); font-size:15px; }
+.toggle-switch { position:relative; width:60px; height:34px; cursor:pointer; }
 .toggle-switch input { opacity:0; width:0; height:0; }
 .toggle-slider { position:absolute; inset:0; background:var(--card2); border-radius:12px; border:1px solid var(--border); transition:.3s; }
-.toggle-slider:before { content:''; position:absolute; height:18px; width:18px; left:2px; bottom:2px; background:var(--muted); border-radius:50%; transition:.3s; }
+.toggle-slider:before { content:''; position:absolute; height:26px; width:26px; left:3px; bottom:3px; background:var(--muted); border-radius:50%; transition:.3s; }
 .toggle-switch input:checked + .toggle-slider { background:var(--primary); border-color:var(--primary); }
-.toggle-switch input:checked + .toggle-slider:before { transform:translateX(20px); background:#000; }
+.toggle-switch input:checked + .toggle-slider:before { transform:translateX(26px); background:#000; }
 
 /* Images Grid */
-.images-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(80px,1fr)); gap:6px; max-height:280px; overflow-y:auto; margin-top:8px; padding:4px; }
+.images-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; max-height:450px; overflow-y:auto; margin-top:8px; padding:4px; }
 .img-thumb { position:relative; border-radius:6px; overflow:hidden; border:2px solid transparent; cursor:pointer; aspect-ratio:1; }
 .img-thumb img { width:100%; height:100%; object-fit:cover; }
 .img-thumb.selected { border-color:var(--primary); }
-.img-thumb .check { position:absolute; top:3px; right:3px; width:18px; height:18px; background:var(--primary); border-radius:50%; display:none; align-items:center; justify-content:center; font-size:10px; color:#000; }
+.img-thumb .check { position:absolute; top:5px; right:5px; width:28px; height:28px; background:var(--primary); border-radius:50%; display:none; align-items:center; justify-content:center; font-size:16px; color:#000; }
 .img-thumb.selected .check { display:flex; }
-.img-thumb .fname { position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,.8); font-size:8px; padding:2px 3px; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.img-thumb .fname { position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,.8); font-size:24px; padding:4px 6px; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
 /* Table */
-table { width:100%; border-collapse:collapse; font-size:11px; }
-th { background:var(--card2); padding:8px 6px; text-align:left; font-size:10px; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1; }
-td { padding:6px; border-bottom:1px solid var(--border); vertical-align:top; }
+table { width:100%; border-collapse:collapse; font-size:16px; }
+th { background:var(--card2); padding:12px 10px; text-align:left; font-size:15px; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1; }
+td { padding:10px; border-bottom:1px solid var(--border); vertical-align:top; }
 tr:hover td { background:rgba(255,153,0,.03); }
-.table-wrap { max-height:600px; overflow:auto; border-radius:6px; border:1px solid var(--border); }
+.table-wrap { max-height:700px; overflow:auto; border-radius:6px; border:1px solid var(--border); }
 
 /* Badges */
-.badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600; }
+.badge { display:inline-block; padding:4px 12px; border-radius:10px; font-size:15px; font-weight:600; }
 .badge-green { background:rgba(34,197,94,.15); color:var(--green); }
 .badge-red { background:rgba(239,68,68,.15); color:var(--red); }
 .badge-blue { background:rgba(59,130,246,.15); color:var(--blue); }
@@ -96,35 +103,35 @@ tr:hover td { background:rgba(255,153,0,.03); }
 .badge-yellow { background:rgba(234,179,8,.15); color:var(--yellow); }
 
 /* Keyword Tags */
-.kw-tag { display:inline-block; margin:1px; padding:2px 6px; background:var(--card2); border-radius:3px; font-size:10px; border:1px solid var(--border); }
+.kw-tag { display:inline-block; margin:1px; padding:4px 10px; background:var(--card2); border-radius:3px; font-size:15px; border:1px solid var(--border); }
 .kw-tag.valid { border-color:var(--green); color:var(--green); }
 .kw-tag.invalid { border-color:var(--red); color:var(--muted); text-decoration:line-through; }
 .kw-tag.replaced { border-color:var(--yellow); color:var(--yellow); }
 
 /* Color chips */
-.color-chip { display:inline-block; padding:1px 6px; border-radius:3px; font-size:9px; margin:1px; border:1px solid var(--border); }
+.color-chip { display:inline-block; padding:3px 10px; border-radius:3px; font-size:14px; margin:1px; border:1px solid var(--border); }
 
 /* Progress */
 .progress-bar { width:100%; height:5px; background:var(--card2); border-radius:3px; overflow:hidden; margin:6px 0; }
 .progress-fill { height:100%; background:var(--primary); transition:width .3s; border-radius:3px; }
 
 /* Status */
-.status-box { padding:8px 12px; border-radius:6px; font-size:12px; margin:8px 0; }
+.status-box { padding:8px 12px; border-radius:6px; font-size:16px; margin:8px 0; }
 .status-info { background:rgba(59,130,246,.1); border:1px solid rgba(59,130,246,.3); color:var(--blue); }
 .status-success { background:rgba(34,197,94,.1); border:1px solid rgba(34,197,94,.3); color:var(--green); }
 .status-error { background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); color:var(--red); }
 
 /* Editable */
-.editable-cell { background:var(--card2); border:1px solid transparent; border-radius:3px; padding:3px 5px; min-height:22px; outline:none; font-size:11px; color:var(--text); }
+.editable-cell { background:var(--card2); border:1px solid transparent; border-radius:3px; padding:6px 10px; min-height:34px; outline:none; font-size:16px; color:var(--text); }
 .editable-cell:focus { border-color:var(--primary); }
 
 /* Char count */
-.char-count { font-size:10px; }
+.char-count { font-size:14px; }
 .char-ok { color:var(--green); }
 .char-over { color:var(--red); }
 
 /* Spinner */
-.spinner { display:inline-block; width:12px; height:12px; border:2px solid var(--border); border-top-color:var(--primary); border-radius:50%; animation:spin .6s linear infinite; }
+.spinner { display:inline-block; width:18px; height:18px; border:2px solid var(--border); border-top-color:var(--primary); border-radius:50%; animation:spin .6s linear infinite; }
 @keyframes spin { to { transform:rotate(360deg); } }
 
 /* API selector */
@@ -132,19 +139,19 @@ tr:hover td { background:rgba(255,153,0,.03); }
 .api-opt { flex:1; padding:8px; border-radius:6px; border:2px solid var(--border); cursor:pointer; text-align:center; transition:.2s; }
 .api-opt:hover { border-color:var(--muted); }
 .api-opt.active { border-color:var(--primary); background:rgba(255,153,0,.05); }
-.api-opt .name { font-size:12px; font-weight:600; }
-.api-opt .desc { font-size:10px; color:var(--muted); }
+.api-opt .name { font-size:18px; font-weight:600; }
+.api-opt .desc { font-size:15px; color:var(--muted); }
 
 /* Modal */
 .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.7); display:flex; align-items:center; justify-content:center; z-index:999; }
 .modal-overlay.hidden { display:none; }
 .modal-content { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px; max-width:500px; width:90%; max-height:80vh; overflow-y:auto; }
-.modal-content h3 { color:var(--primary); margin-bottom:12px; font-size:15px; }
+.modal-content h3 { color:var(--primary); margin-bottom:12px; font-size:22px; }
 
 /* DB Table */
 .db-table { width:100%; }
-.db-table th { font-size:11px; padding:8px; }
-.db-table td { padding:6px 8px; font-size:12px; }
+.db-table th { font-size:16px; padding:8px; }
+.db-table td { padding:6px 8px; font-size:17px; }
 .db-search { margin-bottom:10px; }
 
 /* Flex helpers */
@@ -153,7 +160,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
 .hidden { display:none; }
 .mt8 { margin-top:8px; }
 .mb8 { margin-bottom:8px; }
-.amazon-link { color:var(--primary); text-decoration:none; font-size:10px; }
+.amazon-link { color:var(--primary); text-decoration:none; font-size:20px; }
 .amazon-link:hover { text-decoration:underline; }
 
 /* Scrollbar */
@@ -163,14 +170,14 @@ tr:hover td { background:rgba(255,153,0,.03); }
 ::-webkit-scrollbar-thumb:hover { background:var(--muted); }
 
 /* Season indicator */
-.season-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:4px; font-size:10px; background:rgba(234,179,8,.1); color:var(--yellow); border:1px solid rgba(234,179,8,.3); }
+.season-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:4px; font-size:15px; background:rgba(234,179,8,.1); color:var(--yellow); border:1px solid rgba(234,179,8,.3); }
 
 /* Safety badge */
 .safety-safe { color:var(--green); }
 .safety-restricted { color:var(--red); }
 
 /* Stats bar */
-.stats-bar { display:flex; gap:16px; padding:8px 12px; background:var(--card2); border-radius:6px; margin-bottom:10px; font-size:11px; flex-wrap:wrap; }
+.stats-bar { display:flex; gap:16px; padding:8px 12px; background:var(--card2); border-radius:6px; margin-bottom:10px; font-size:16px; flex-wrap:wrap; }
 .stat-item { display:flex; align-items:center; gap:4px; }
 .stat-num { font-weight:700; color:var(--primary); }
 
@@ -180,15 +187,32 @@ tr:hover td { background:rgba(255,153,0,.03); }
 
 /* Supabase status */
 #supabaseStatus code { user-select:all; }
+
+/* Pulse animation for generate button */
+@keyframes pulse-green {
+  0%,100% { box-shadow:0 0 20px rgba(34,197,94,.3); }
+  50% { box-shadow:0 0 35px rgba(34,197,94,.6); }
+}
+.btn-generate-ready { animation:pulse-green 2s infinite; }
+
+/* Column collapse styles */
+.col-collapsed { width:30px !important; max-width:30px; overflow:hidden; }
+.col-collapsed * { display:none; }
+.td-collapsed { max-width:30px; overflow:hidden; background:var(--card2); }
+.td-collapsed * { display:none; }
+
+/* Image delete button */
+.img-delete { position:absolute; top:5px; left:5px; width:28px; height:28px; background:rgba(239,68,68,.9); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; color:#fff; cursor:pointer; opacity:0; transition:.2s; }
+.img-thumb:hover .img-delete { opacity:1; }
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
 <div class="header">
-  <svg width="36" height="36" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="#FF9900"/><text x="20" y="26" text-anchor="middle" fill="#000" font-size="20" font-weight="bold">M</text></svg>
+  <svg width="56" height="56" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="#FF9900"/><text x="20" y="26" text-anchor="middle" fill="#000" font-size="28" font-weight="bold">M</text></svg>
   <div>
-    <h1>Amazon Merch Keyword Generator V3</h1>
+    <h1>Amazon Merch Keyword Generator V4</h1>
     <span>สร้าง SEO Keywords + Title + Colors + Safety Check สำหรับ Amazon Merch on Demand</span>
   </div>
 </div>
@@ -196,12 +220,12 @@ tr:hover td { background:rgba(255,153,0,.03); }
 <!-- MAIN TABS -->
 <div class="main-tabs">
   <div class="main-tab active" onclick="switchTab('generator')">🚀 Generator</div>
-  <div class="main-tab" onclick="switchTab('apiconfig')">🔑 AI API</div>
+  <div class="main-tab" onclick="switchTab('seasonal')">🔑 เพิ่ม Keyword</div>
   <div class="main-tab" onclick="switchTab('rejected')">🚫 Rejected Keywords</div>
-  <div class="main-tab" onclick="switchTab('seasonal')">🎄 Seasonal Keywords</div>
   <div class="main-tab" onclick="switchTab('trademark')">™️ Trademark DB</div>
   <div class="main-tab" onclick="switchTab('history')">📜 History</div>
   <div class="main-tab" onclick="switchTab('settings')">⚙️ Settings</div>
+  <div class="main-tab" onclick="switchTab('apiconfig')">🔑 AI API</div>
 </div>
 
 <!-- ======================== TAB: GENERATOR ======================== -->
@@ -213,14 +237,21 @@ tr:hover td { background:rgba(255,153,0,.03); }
       <!-- Brand Name -->
       <div class="panel">
         <h2>🏷️ Brand</h2>
+        <div class="toggle-row" style="margin-bottom:8px">
+          <div class="toggle-label">🤖 AI คิด Brand ให้</div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleAIBrand" onchange="toggleAIBrandFn()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
         <div class="field">
           <label>Brand Name (50 ตัวอักษร)</label>
           <input type="text" id="brandName" placeholder="ชื่อแบรนด์ของคุณ" maxlength="50">
           <span class="char-count char-ok" id="brandCount">0/50</span>
         </div>
-        <div id="apiMiniStatus" style="padding:6px 10px;border-radius:6px;background:var(--card2);font-size:11px;margin-top:4px;display:flex;justify-content:space-between;align-items:center">
+        <div id="apiMiniStatus" style="padding:6px 10px;border-radius:6px;background:var(--card2);font-size:22px;margin-top:4px;display:flex;justify-content:space-between;align-items:center">
           <span id="apiMiniProvider" style="color:var(--muted)">AI: ยังไม่ได้ตั้งค่า</span>
-          <a href="#" onclick="event.preventDefault();switchTab('apiconfig')" style="color:var(--blue);font-size:11px;text-decoration:none">ตั้งค่า AI →</a>
+          <a href="#" onclick="event.preventDefault();switchTab('apiconfig')" style="color:var(--blue);font-size:22px;text-decoration:none">ตั้งค่า AI →</a>
         </div>
       </div>
 
@@ -254,10 +285,16 @@ tr:hover td { background:rgba(255,153,0,.03); }
       <div class="panel">
         <h2>🖼️ เลือกรูปลายเสื้อ</h2>
         <input type="file" id="fileInput" multiple accept="image/*" style="display:none">
-        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()" style="width:100%">
-          📁 เลือกรูปจากโฟลเดอร์
-        </button>
-        <div class="flex-between mt8" style="font-size:12px;color:var(--muted)">
+        <input type="file" id="folderInput" multiple accept="image/*" webkitdirectory style="display:none">
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()" style="flex:1">
+            📁 เลือกรูป
+          </button>
+          <button class="btn btn-blue" onclick="document.getElementById('folderInput').click()" style="flex:1">
+            📂 เลือกทั้งโฟลเดอร์
+          </button>
+        </div>
+        <div class="flex-between mt8" style="font-size:16px;color:var(--muted)">
           <span id="imgCount">ยังไม่ได้เลือกรูป</span>
           <div class="flex-gap">
             <button class="btn btn-sm btn-blue" onclick="selectAllImages()">เลือกทั้งหมด</button>
@@ -265,14 +302,9 @@ tr:hover td { background:rgba(255,153,0,.03); }
           </div>
         </div>
         <div class="images-grid" id="imagesGrid"></div>
-        <div class="mt8">
-          <button class="btn btn-primary" id="btnGenerate" onclick="generateKeywords()" style="width:100%" disabled>
-            🚀 สร้าง Keywords จากรูปที่เลือก
-          </button>
-        </div>
         <div id="progressArea" class="hidden mt8">
           <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-          <div style="font-size:11px;color:var(--muted)" id="progressText">กำลังประมวลผล...</div>
+          <div style="font-size:15px;color:var(--muted)" id="progressText">กำลังประมวลผล...</div>
         </div>
       </div>
     </div>
@@ -283,8 +315,11 @@ tr:hover td { background:rgba(255,153,0,.03); }
         <div class="flex-between mb8">
           <h2 style="margin:0">📊 ผลลัพธ์</h2>
           <div class="flex-gap">
-            <button class="btn btn-sm btn-green" onclick="exportExcel()" id="btnExport" disabled>📥 Export Excel</button>
-            <button class="btn btn-sm btn-red" onclick="clearResults()" id="btnClear" disabled>🗑️ ล้าง</button>
+            <button class="btn btn-green" onclick="generateKeywords()" id="btnGenerate" disabled style="position:relative;box-shadow:0 0 20px rgba(34,197,94,.3)">
+              🚀 สร้าง Keyword
+            </button>
+            <button class="btn btn-primary" onclick="exportExcel()" id="btnExport" disabled>📥 Export Excel</button>
+            <button class="btn btn-red" onclick="clearResults()" id="btnClear" disabled>🗑️ ล้าง</button>
           </div>
         </div>
         <div id="statsBar" class="stats-bar hidden">
@@ -304,13 +339,15 @@ tr:hover td { background:rgba(255,153,0,.03); }
                 <th>Title <small>(60)</small></th>
                 <th style="width:100px">Brand <small>(50)</small></th>
                 <th style="width:80px">Type</th>
-                <th style="width:180px">Keywords / Amazon</th>
+                <th class="col-bp1" style="width:160px;cursor:pointer" onclick="toggleColumn('bp1')">BP1 <small>▼</small></th>
+                <th class="col-bp2" style="width:160px;cursor:pointer" onclick="toggleColumn('bp2')">BP2 <small>▼</small></th>
+                <th class="col-desc" style="width:180px;cursor:pointer" onclick="toggleColumn('desc')">Description <small>▼</small></th>
                 <th style="width:120px">Colors</th>
                 <th style="width:60px">สถานะ</th>
               </tr>
             </thead>
             <tbody id="resultsBody">
-              <tr><td colspan="9" style="text-align:center;padding:30px;color:var(--muted)">เลือกรูปและกด "สร้าง Keywords" เพื่อเริ่มต้น</td></tr>
+              <tr><td colspan="11" style="text-align:center;padding:30px;color:var(--muted)">เลือกรูปและกด "สร้าง Keywords" เพื่อเริ่มต้น</td></tr>
             </tbody>
           </table>
         </div>
@@ -325,7 +362,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
 <div class="container" style="max-width:900px">
   <div class="panel">
     <h2>🔑 ตั้งค่า AI API Provider</h2>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:16px">เลือก AI Provider และใส่ API Key สำหรับวิเคราะห์รูปลายเสื้อ (รองรับ 4 providers)</p>
+    <p style="font-size:24px;color:var(--muted);margin-bottom:16px">เลือก AI Provider และใส่ API Key สำหรับวิเคราะห์รูปลายเสื้อ (รองรับ 4 providers)</p>
 
     <!-- Provider Selection -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
@@ -359,7 +396,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
         <button class="btn btn-sm btn-blue" onclick="toggleShowKey()">👁️</button>
         <button class="btn btn-sm btn-green" onclick="testAPIKey()">🧪 ทดสอบ</button>
       </div>
-      <div id="apiKeyHint" style="font-size:11px;color:var(--muted);margin-top:4px"></div>
+      <div id="apiKeyHint" style="font-size:22px;color:var(--muted);margin-top:4px"></div>
     </div>
 
     <!-- OpenRouter Model Selection (only shown for OpenRouter) -->
@@ -400,37 +437,37 @@ tr:hover td { background:rgba(255,153,0,.03); }
   <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
     <div class="panel">
       <h2 style="font-size:13px">🟢 OpenAI</h2>
-      <div style="font-size:11px;color:var(--muted)">
+      <div style="font-size:22px;color:var(--muted)">
         <p>Model: <strong>GPT-4o</strong></p>
         <p>Key format: <code>sk-...</code></p>
-        <p>สมัครได้ที่: <a href="https://platform.openai.com/api-keys" target="_blank" class="amazon-link" style="font-size:11px">platform.openai.com</a></p>
+        <p>สมัครได้ที่: <a href="https://platform.openai.com/api-keys" target="_blank" class="amazon-link" style="font-size:22px">platform.openai.com</a></p>
         <p style="margin-top:4px">Vision ดี, Keywords แม่นยำ, ราคาปานกลาง</p>
       </div>
     </div>
     <div class="panel">
       <h2 style="font-size:13px">🟠 Claude (Anthropic)</h2>
-      <div style="font-size:11px;color:var(--muted)">
+      <div style="font-size:22px;color:var(--muted)">
         <p>Model: <strong>Claude Sonnet 4</strong></p>
         <p>Key format: <code>sk-ant-...</code></p>
-        <p>สมัครได้ที่: <a href="https://console.anthropic.com/" target="_blank" class="amazon-link" style="font-size:11px">console.anthropic.com</a></p>
+        <p>สมัครได้ที่: <a href="https://console.anthropic.com/" target="_blank" class="amazon-link" style="font-size:22px">console.anthropic.com</a></p>
         <p style="margin-top:4px">วิเคราะห์รูปละเอียด, Safety check ดี</p>
       </div>
     </div>
     <div class="panel">
       <h2 style="font-size:13px">🔵 OpenRouter</h2>
-      <div style="font-size:11px;color:var(--muted)">
+      <div style="font-size:22px;color:var(--muted)">
         <p>Model: <strong>เลือกได้หลาย model</strong></p>
         <p>Key format: <code>sk-or-...</code></p>
-        <p>สมัครได้ที่: <a href="https://openrouter.ai/keys" target="_blank" class="amazon-link" style="font-size:11px">openrouter.ai</a></p>
+        <p>สมัครได้ที่: <a href="https://openrouter.ai/keys" target="_blank" class="amazon-link" style="font-size:22px">openrouter.ai</a></p>
         <p style="margin-top:4px">ใช้หลาย model ได้, มี free tier, คุ้มค่า</p>
       </div>
     </div>
     <div class="panel">
       <h2 style="font-size:13px">🔴 Google Gemini</h2>
-      <div style="font-size:11px;color:var(--muted)">
+      <div style="font-size:22px;color:var(--muted)">
         <p>Model: <strong>Gemini 2.0 Flash</strong></p>
         <p>Key format: <code>AIza...</code></p>
-        <p>สมัครได้ที่: <a href="https://aistudio.google.com/apikey" target="_blank" class="amazon-link" style="font-size:11px">aistudio.google.com</a></p>
+        <p>สมัครได้ที่: <a href="https://aistudio.google.com/apikey" target="_blank" class="amazon-link" style="font-size:22px">aistudio.google.com</a></p>
         <p style="margin-top:4px">ฟรี quota สูง, เร็ว, วิเคราะห์สีดี</p>
       </div>
     </div>
@@ -443,7 +480,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
 <div class="container" style="max-width:900px">
   <div class="panel">
     <h2>🚫 Rejected Keywords Database</h2>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:12px">เก็บ keyword ที่ถูก Amazon reject ไว้ เพื่อไม่ให้ระบบสร้างซ้ำอีก</p>
+    <p style="font-size:24px;color:var(--muted);margin-bottom:12px">เก็บ keyword ที่ถูก Amazon reject ไว้ เพื่อไม่ให้ระบบสร้างซ้ำอีก</p>
 
     <div style="display:flex;gap:8px;margin-bottom:12px">
       <input type="text" id="rejectedInput" placeholder="Keyword ที่ถูก reject..." style="flex:2">
@@ -456,7 +493,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
       <div class="flex-gap">
         <button class="btn btn-sm btn-blue" onclick="exportDB('rejected')">📤 Export JSON</button>
         <button class="btn btn-sm btn-green" onclick="importDB('rejected')">📥 Import JSON</button>
-        <span style="font-size:11px;color:var(--muted)" id="rejectedCount">0 รายการ</span>
+        <span style="font-size:22px;color:var(--muted)" id="rejectedCount">0 รายการ</span>
       </div>
     </div>
 
@@ -483,16 +520,16 @@ tr:hover td { background:rgba(255,153,0,.03); }
 <div id="tab-seasonal" class="tab-content">
 <div class="container" style="max-width:1000px">
   <div class="panel">
-    <h2>🎄 Seasonal Keywords Database</h2>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:12px">keyword เทศกาลที่จะถูกเพิ่มอัตโนมัติเมื่อ AI ตรวจจับว่ารูปเป็นธีมเทศกาล</p>
+    <h2>🔑 เพิ่ม Keyword</h2>
+    <p style="font-size:24px;color:var(--muted);margin-bottom:12px">เพิ่ม Keyword ต่างๆ ตามธีม เช่น คริสมาส, วันเกิด, วาเลนไทน์ เพื่อนำไปใช้ในการ Generate Keyword ให้กับ Title</p>
 
     <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
       <select id="seasonSelect" style="width:180px" onchange="renderSeasonalDB()">
-        <option value="">-- เลือกเทศกาล --</option>
+        <option value="">-- เลือกกลุ่ม Keyword --</option>
       </select>
-      <input type="text" id="seasonKWInput" placeholder="เพิ่ม keyword เทศกาล..." style="flex:1">
+      <input type="text" id="seasonKWInput" placeholder="เพิ่ม keyword..." style="flex:1">
       <button class="btn btn-primary" onclick="addSeasonalKW()">+ เพิ่ม Keyword</button>
-      <button class="btn btn-green" onclick="addNewSeason()">+ เทศกาลใหม่</button>
+      <button class="btn btn-green" onclick="addNewSeason()">+ กลุ่มใหม่</button>
     </div>
 
     <div class="flex-between mb8">
@@ -512,7 +549,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
 <div class="container" style="max-width:900px">
   <div class="panel">
     <h2>™️ Trademark / Copyright Database</h2>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:12px">คำที่มีลิขสิทธิ์/เครื่องหมายการค้า ระบบจะกรองออกอัตโนมัติ</p>
+    <p style="font-size:24px;color:var(--muted);margin-bottom:12px">คำที่มีลิขสิทธิ์/เครื่องหมายการค้า ระบบจะกรองออกอัตโนมัติ · กดปุ่ม 🔍 เพื่อตรวจสอบบนเว็บลิขสิทธิ์</p>
 
     <div style="display:flex;gap:8px;margin-bottom:12px">
       <input type="text" id="tmInput" placeholder="คำ Trademark..." style="flex:2">
@@ -527,12 +564,26 @@ tr:hover td { background:rgba(255,153,0,.03); }
       <button class="btn btn-primary" onclick="addTrademark()">+ เพิ่ม</button>
     </div>
 
+    <!-- Quick Trademark Search -->
+    <div style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px">
+      <label style="font-size:15px;margin-bottom:6px">🔍 ค้นหาลิขสิทธิ์บนเว็บภายนอก</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="text" id="tmQuickSearch" placeholder="พิมพ์คำเพื่อค้นหา..." style="flex:1;font-size:16px;padding:10px 12px">
+      </div>
+      <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+        <button class="btn" style="background:#1a73e8;color:#fff;padding:8px 16px;font-size:15px" onclick="searchTM('uspto')" title="USPTO (สหรัฐ)">🔍 USPTO <small style="opacity:.7">(สหรัฐ)</small></button>
+        <button class="btn" style="background:#ff6d00;color:#fff;padding:8px 16px;font-size:15px" onclick="searchTM('trademarkia')" title="Trademarkia">🔍 Trademarkia</button>
+        <button class="btn" style="background:#003399;color:#fff;padding:8px 16px;font-size:15px" onclick="searchTM('euipo')" title="EUIPO (ยุโรป)">🔍 EUIPO <small style="opacity:.7">(ยุโรป)</small></button>
+        <button class="btn" style="background:#00695c;color:#fff;padding:8px 16px;font-size:15px" onclick="searchTM('wipo')" title="WIPO (โลก)">🔍 WIPO <small style="opacity:.7">(โลก)</small></button>
+      </div>
+    </div>
+
     <div class="flex-between mb8">
       <input type="text" id="tmSearch" placeholder="🔍 ค้นหา..." style="width:250px" oninput="renderTrademarkDB()">
       <div class="flex-gap">
         <button class="btn btn-sm btn-blue" onclick="exportDB('trademark')">📤 Export</button>
         <button class="btn btn-sm btn-green" onclick="importDB('trademark')">📥 Import</button>
-        <span style="font-size:11px;color:var(--muted)" id="tmCount">0 รายการ</span>
+        <span style="font-size:22px;color:var(--muted)" id="tmCount">0 รายการ</span>
       </div>
     </div>
 
@@ -544,6 +595,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
             <th>คำ Trademark</th>
             <th style="width:120px">หมวดหมู่</th>
             <th style="width:100px">วันที่</th>
+            <th style="width:50px">ค้นหา</th>
             <th style="width:40px"></th>
           </tr>
         </thead>
@@ -564,7 +616,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
       <div class="flex-gap">
         <button class="btn btn-sm btn-blue" onclick="exportDB('history')">📤 Export</button>
         <button class="btn btn-sm btn-red" onclick="clearHistory()">🗑️ ล้างประวัติ</button>
-        <span style="font-size:11px;color:var(--muted)" id="historyCount">0 รายการ</span>
+        <span style="font-size:22px;color:var(--muted)" id="historyCount">0 รายการ</span>
       </div>
     </div>
     <div class="table-wrap" style="max-height:500px">
@@ -594,7 +646,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
   <!-- Supabase Cloud Database -->
   <div class="panel">
     <h2>☁️ Supabase Cloud Database</h2>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:12px">เชื่อมต่อ Supabase เพื่อเก็บข้อมูลบน Cloud (sync ข้ามอุปกรณ์)</p>
+    <p style="font-size:24px;color:var(--muted);margin-bottom:12px">เชื่อมต่อ Supabase เพื่อเก็บข้อมูลบน Cloud (sync ข้ามอุปกรณ์)</p>
     <div class="field">
       <label>Supabase URL</label>
       <input type="text" id="supabaseUrl" placeholder="https://xxxxx.supabase.co" value="https://upppgioaitbplxinkvga.supabase.co">
@@ -636,7 +688,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
     <h2>💾 ข้อมูลในเครื่อง</h2>
     <div class="stats-bar">
       <div class="stat-item">Rejected: <span class="stat-num" id="setRejCount">0</span></div>
-      <div class="stat-item">Seasonal: <span class="stat-num" id="setSeaCount">0</span></div>
+      <div class="stat-item">Keywords: <span class="stat-num" id="setSeaCount">0</span></div>
       <div class="stat-item">Trademark: <span class="stat-num" id="setTMCount">0</span></div>
       <div class="stat-item">History: <span class="stat-num" id="setHistCount">0</span></div>
     </div>
@@ -664,6 +716,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
 let selectedAPI = 'openai';
 let uploadedImages = [];
 let results = [];
+const collapsedCols = { bp1:false, bp2:false, desc:true };
 
 // ============================================================
 // ALL 34 COLORS
@@ -706,16 +759,16 @@ const DB = {
 
   defaultSeasonal() {
     return [
-      { id:'s1', season:"Valentine's Day", keywords:["Valentine Gift T-Shirt","Love T-Shirt","Couples T-Shirt","Valentines Day T-Shirt","Heart T-Shirt","Be My Valentine T-Shirt"], activeMonths:[1,2] },
-      { id:'s2', season:"St. Patrick's Day", keywords:["St Patricks Day T-Shirt","Irish T-Shirt","Shamrock T-Shirt","Lucky T-Shirt","Green Clover T-Shirt"], activeMonths:[2,3] },
-      { id:'s3', season:"Easter", keywords:["Easter T-Shirt","Easter Bunny T-Shirt","Happy Easter T-Shirt","Easter Egg T-Shirt","Easter Basket T-Shirt"], activeMonths:[3,4] },
-      { id:'s4', season:"Mother's Day", keywords:["Mom T-Shirt","Best Mom T-Shirt","Mothers Day T-Shirt","Mom Life T-Shirt","Mama T-Shirt"], activeMonths:[4,5] },
-      { id:'s5', season:"Father's Day", keywords:["Dad T-Shirt","Best Dad T-Shirt","Fathers Day T-Shirt","Dad Joke T-Shirt","Papa T-Shirt"], activeMonths:[5,6] },
-      { id:'s6', season:"4th of July", keywords:["4th Of July T-Shirt","Patriotic T-Shirt","American Flag T-Shirt","USA T-Shirt","Independence Day T-Shirt","Merica T-Shirt"], activeMonths:[6,7] },
-      { id:'s7', season:"Halloween", keywords:["Halloween T-Shirt","Spooky T-Shirt","Trick Or Treat T-Shirt","Witch T-Shirt","Pumpkin T-Shirt","Scary T-Shirt","Ghost T-Shirt"], activeMonths:[8,9,10] },
-      { id:'s8', season:"Thanksgiving", keywords:["Thanksgiving T-Shirt","Thankful T-Shirt","Turkey T-Shirt","Grateful T-Shirt","Fall T-Shirt"], activeMonths:[10,11] },
-      { id:'s9', season:"Christmas", keywords:["Christmas T-Shirt","Merry Christmas T-Shirt","Santa T-Shirt","Xmas T-Shirt","Holiday T-Shirt","Ugly Christmas T-Shirt"], activeMonths:[10,11,12] },
-      { id:'s10', season:"New Year", keywords:["New Year T-Shirt","Happy New Year T-Shirt","New Years Eve T-Shirt","2026 T-Shirt","Cheers T-Shirt"], activeMonths:[11,12,1] }
+      { id:'s1', season:"Valentine's Day", keywords:["Valentine Gift","Love","Couples","Valentines Day","Heart","Be My Valentine"], activeMonths:[1,2] },
+      { id:'s2', season:"St. Patrick's Day", keywords:["St Patricks Day","Irish","Shamrock","Lucky","Green Clover"], activeMonths:[2,3] },
+      { id:'s3', season:"Easter", keywords:["Easter","Easter Bunny","Happy Easter","Easter Egg","Easter Basket"], activeMonths:[3,4] },
+      { id:'s4', season:"Mother's Day", keywords:["Mom","Best Mom","Mothers Day","Mom Life","Mama"], activeMonths:[4,5] },
+      { id:'s5', season:"Father's Day", keywords:["Dad","Best Dad","Fathers Day","Dad Joke","Papa"], activeMonths:[5,6] },
+      { id:'s6', season:"4th of July", keywords:["4th Of July","Patriotic","American Flag","USA","Independence Day","Merica"], activeMonths:[6,7] },
+      { id:'s7', season:"Halloween", keywords:["Halloween","Spooky","Trick Or Treat","Witch","Pumpkin","Scary","Ghost"], activeMonths:[8,9,10] },
+      { id:'s8', season:"Thanksgiving", keywords:["Thanksgiving","Thankful","Turkey","Grateful","Fall"], activeMonths:[10,11] },
+      { id:'s9', season:"Christmas", keywords:["Christmas","Merry Christmas","Santa","Xmas","Holiday","Ugly Christmas"], activeMonths:[10,11,12] },
+      { id:'s10', season:"New Year", keywords:["New Year","Happy New Year","New Years Eve","2026","Cheers"], activeMonths:[11,12,1] }
     ];
   },
 
@@ -741,6 +794,23 @@ const DB = {
     ].map((t,i) => ({ id:'tm_'+i, term:t, category:'brand', dateAdded:new Date().toISOString().slice(0,10) }));
   }
 };
+
+// ============================================================
+// COLUMN TOGGLE
+// ============================================================
+function toggleColumn(col) {
+  collapsedCols[col] = !collapsedCols[col];
+  renderResults();
+  // Update header styles
+  document.querySelectorAll('.col-'+col).forEach(el => {
+    el.classList.toggle('col-collapsed', collapsedCols[col]);
+    if(collapsedCols[col]) el.innerHTML = col.toUpperCase().replace('DESC','Desc');
+    else {
+      const labels = {bp1:'BP1 <small>▼</small>', bp2:'BP2 <small>▼</small>', desc:'Description <small>▼</small>'};
+      el.innerHTML = labels[col];
+    }
+  });
+}
 
 // ============================================================
 // INIT
@@ -875,6 +945,15 @@ function loadToggles() {
   document.getElementById('toggleBP1').checked = s.bp1 !== false;
   document.getElementById('toggleBP2').checked = s.bp2 !== false;
   document.getElementById('toggleDesc').checked = s.desc === true;
+  document.getElementById('toggleAIBrand').checked = s.aiBrand === true;
+}
+function toggleAIBrandFn() {
+  const on = document.getElementById('toggleAIBrand').checked;
+  const inp = document.getElementById('brandName');
+  inp.disabled = on;
+  inp.style.opacity = on ? '0.4' : '1';
+  inp.placeholder = on ? 'AI จะสร้าง Brand Name ให้อัตโนมัติ' : 'ชื่อแบรนด์ของคุณ';
+  const s = DB.getSettings(); s.aiBrand = on; DB.setSettings(s);
 }
 
 // ============================================================
@@ -899,22 +978,38 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
   renderImages();
 });
 
+document.getElementById('folderInput').addEventListener('change', function(e) {
+  Array.from(e.target.files).forEach(f => {
+    if(!f.type.startsWith('image/')) return;
+    uploadedImages.push({ file:f, url:URL.createObjectURL(f), name:f.name, selected:true });
+  });
+  renderImages();
+});
+
 function renderImages() {
   const grid = document.getElementById('imagesGrid');
   grid.innerHTML = '';
   uploadedImages.forEach((img,i) => {
     const div = document.createElement('div');
     div.className = 'img-thumb' + (img.selected ? ' selected' : '');
-    div.innerHTML = `<img src="${img.url}" onclick="event.stopPropagation();previewImage('${img.url}')"><div class="check">✓</div><div class="fname">${img.name}</div>`;
+    div.innerHTML = `<img src="${img.url}" onclick="event.stopPropagation();previewImage('${img.url}')"><div class="check">✓</div><div class="fname">${img.name}</div><div class="img-delete" onclick="event.stopPropagation();deleteImage(${i})" title="ลบรูปนี้">✕</div>`;
     div.onclick = () => { img.selected = !img.selected; renderImages(); };
     grid.appendChild(div);
   });
   const sel = uploadedImages.filter(i => i.selected).length;
   document.getElementById('imgCount').textContent = sel ? `${sel}/${uploadedImages.length} รูปถูกเลือก` : 'ยังไม่ได้เลือกรูป';
-  document.getElementById('btnGenerate').disabled = sel === 0 || !document.getElementById('apiKey').value;
+  const ready = sel > 0 && !!document.getElementById('apiKey').value;
+  document.getElementById('btnGenerate').disabled = !ready;
+  if(ready) document.getElementById('btnGenerate').classList.add('btn-generate-ready');
+  else document.getElementById('btnGenerate').classList.remove('btn-generate-ready');
 }
 function selectAllImages() { uploadedImages.forEach(i => i.selected = true); renderImages(); }
 function deselectAllImages() { uploadedImages.forEach(i => i.selected = false); renderImages(); }
+function deleteImage(idx) {
+  URL.revokeObjectURL(uploadedImages[idx].url);
+  uploadedImages.splice(idx, 1);
+  renderImages();
+}
 function previewImage(url) {
   document.getElementById('previewImg').src = url;
   document.getElementById('previewModal').classList.remove('hidden');
@@ -947,30 +1042,73 @@ async function analyzeImage(file) {
   const colorList = ALL_COLORS.join(', ');
   const lightList = LIGHT_COLORS.join(', ');
   const darkList = DARK_COLORS.join(', ');
+  const aiBrandOn = document.getElementById('toggleAIBrand').checked;
+
+  // Get custom keywords from the keyword database (formerly seasonal)
+  const customKWDB = DB.getSeasonal();
+  const customKWList = customKWDB.flatMap(s => s.keywords || []).join(', ');
+  const customKWNote = customKWList ? `\nUser has these custom keywords to consider incorporating if relevant: ${customKWList}` : '';
+
+  // Get required keywords that MUST appear in every Title
+  const requiredTitleKWs = getRequiredTitleKeywords();
+  const requiredTitleNote = requiredTitleKWs.length > 0 ? `\n⚠️ MANDATORY: The following keywords MUST appear in EVERY title: ${requiredTitleKWs.join(', ')}. Work these words naturally into the title while still following the 50-60 character limit.` : '';
 
   const prompt = `You are an expert Amazon Merch on Demand keyword researcher and product listing specialist.
+You deeply understand Amazon's listing policies and SEO best practices.
 
 Analyze this t-shirt design image and perform ALL of the following tasks:
 
-## TASK A: SEO Keywords
-- Generate 8-12 keyword phrases that real Amazon customers search for
-- Each keyword MUST end with "T-Shirt"
-- Mix broad + niche keywords
-- Detect if design relates to a seasonal theme (Valentine's Day, Easter, Halloween, Christmas, etc.)
-- Generate a Title (max 60 characters) using the best keyword
+## TASK A: Design Element Detection
+First, carefully identify ALL elements in the design:
+- Text/words written on the design (exact text)
+- Animals (e.g., cat, dog, dinosaur, unicorn, etc.)
+- Objects (e.g., guitar, camera, coffee cup, mountain, etc.)
+- Characters or people
+- Symbols or icons
+List these as detectedElements in your response.
 
-## TASK B: Content Safety Check
+## TASK B: SEO Keywords (CRITICAL - Follow Amazon Merch Rules)
+Generate 8-12 long-tail keyword phrases based on detected elements.
+
+### MANDATORY RULES for Keywords:
+- Keywords should describe the DESIGN CONTENT, theme, audience, and occasion
+- DO NOT include product type words: T-Shirt, Shirt, Tee, Tee-Shirt, Hoodie, Sweatshirt, Tank Top, Top, Apparel, Clothing, Wear, Outfit, Garment (Amazon adds these automatically)
+- DO NOT include print quality/effect words: Gold, Silver, Glitter, Sparkle, Shimmer, Metallic, Holographic, Rhinestone, Sequin, Embossed, Foil, Neon, Glow-in-the-dark, 3D, Embroidered, Bedazzled, Jeweled (these CANNOT be printed and Amazon is very strict about this)
+- DO NOT include fabric/material words: Cotton, Polyester, Soft, Premium, Lightweight, Comfortable, Breathable
+- DO NOT include promotional words: Best, Sale, Discount, Free Shipping, Limited, Guarantee, #1, Top Rated, Bestseller, New
+- DO use: niche + audience + occasion format (e.g., "Funny Cat Lover Gift Dad Birthday")
+- Mix broad keywords ("Funny Animal Lover Gift") with niche long-tail keywords ("Retro Cat Playing Guitar Music Dad")
+- Each keyword should read naturally, like what a real customer would search for
+- Detect if design relates to a seasonal/occasion theme (Valentine's Day, Easter, Halloween, Christmas, Birthday, etc.)
+${customKWNote}
+
+## TASK C: Title Generation (CRITICAL - must be close to 60 characters)
+Amazon Merch titles have a 60-character limit. The title is the MOST important SEO element.
+${requiredTitleNote}
+
+### Title Rules:
+- Formula: [Design Theme/Text] + [Niche/Audience] + [Occasion/Use]
+- MUST be 50-60 characters (as close to 60 as possible!)
+- DO NOT include: T-Shirt, Shirt, Tee (Amazon adds product type automatically)
+- DO NOT include: print effects, fabric quality, promotional words
+- DO NOT repeat keywords - each word should be unique
+- Make it read naturally, not keyword-stuffed
+- Place the strongest keyword phrase FIRST
+- Example: "Funny Cat Playing Guitar Retro Music Lover Dad Gift" (52 chars)
+- If too short, ADD relevant descriptors: audience (Mom, Dad, Kids), occasion (Birthday, Christmas), style (Retro, Vintage)
+
+## TASK D: Content Safety Check
 Analyze the design for restricted content:
 - Sexual content or suggestive imagery
 - Drug references (including cannabis/marijuana/weed)
 - Alcohol/intoxicating beverages
 - Violence of any kind
-- Weapons: knives, guns, crossbows, sharp objects, or anything suggesting violence
+- Weapons: knives, guns, crossbows, sharp objects
 
 If ANY restricted content is found: type = "man, woman"
 If NO restricted content: type = "man, woman, youth, girls"
 
-## TASK C: Design Color Analysis
+## TASK E: Design Color Analysis
 Analyze the main color of text/graphics in the design:
 - If design elements are BLACK/dark colored → recommend LIGHT shirt colors: ${lightList}
 - If design elements are WHITE/light colored → recommend DARK shirt colors: ${darkList}
@@ -978,16 +1116,30 @@ Analyze the main color of text/graphics in the design:
 - Choose from ONLY these 34 colors: ${colorList}
 - Select as many appropriate colors as possible (more = better for sales)
 
-## TASK D: Content Generation
-${bp1On ? '- Generate Bullet Point 1 (max 250 chars): A compelling product feature description using top keywords' : '- Skip Bullet Point 1'}
-${bp2On ? '- Generate Bullet Point 2 (max 250 chars): Another feature/benefit using remaining keywords' : '- Skip Bullet Point 2'}
-${descOn ? '- Generate Description (max 2000 chars): Full product description with all valid keywords naturally woven in' : '- Skip Description'}
+## TASK F: Content Generation (Follow Amazon Merch Best Practices)
+${bp1On ? '- Generate Bullet Point 1 (max 250 chars): Describe the design appeal and who it is perfect for. Use secondary keywords naturally. Tell the customer WHY they want this design.' : '- Skip Bullet Point 1'}
+${bp2On ? '- Generate Bullet Point 2 (max 250 chars): Describe the occasion/use case (gift idea, birthday, holiday). Include remaining keywords naturally. Avoid keyword stuffing.' : '- Skip Bullet Point 2'}
+${descOn ? '- Generate Description (max 2000 chars): Write a compelling product description. Weave keywords naturally. Focus on design features, target audience, and gift occasions. DO NOT mention print quality, fabric, or shipping.' : '- Skip Description'}
+
+### Bullet Point & Description Rules:
+- DO NOT mention: product type (shirt/tee), fabric, print quality, shipping, discounts
+- DO NOT keyword-stuff - sentences must read naturally (read aloud test)
+- Focus on: design theme, who it is for, occasions, emotional appeal
+
+${aiBrandOn ? '## TASK G: Brand Name\n- Generate a creative, memorable brand name (max 50 chars) suitable for this t-shirt design category\n- Avoid trademarked names, celebrity names, or copyrighted terms' : ''}
 
 ## IMPORTANT: Return ONLY valid JSON in this exact format:
 {
-  "keywords": ["keyword1 T-Shirt", "keyword2 T-Shirt"],
-  "suggestedTitle": "Best Keyword Title Here T-Shirt",
-  "detectedSeason": "Easter" or null,
+  "keywords": ["Funny Cat Lover Gift Dad", "Retro Music Guitar Vintage Birthday"],
+  "suggestedTitle": "Funny Cat Playing Guitar Retro Music Lover Dad Gift",
+  "detectedSeason": "Christmas" or null,
+  "detectedElements": {
+    "text": "exact text on shirt",
+    "animals": ["cat", "dog"],
+    "objects": ["guitar", "mountain"],
+    "characters": [],
+    "symbols": []
+  },
   "contentSafety": {
     "isSafe": true,
     "flags": [],
@@ -999,7 +1151,7 @@ ${descOn ? '- Generate Description (max 2000 chars): Full product description wi
   },
   "bulletPoint1": "..." or "",
   "bulletPoint2": "..." or "",
-  "description": "..." or ""
+  "description": "..." or ""${aiBrandOn ? ',\n  "suggestedBrand": "Creative Brand Name"' : ''}
 }`;
 
   if(selectedAPI === 'openai') {
@@ -1108,11 +1260,13 @@ function parseAIResponse(content) {
         keywords: parsed.keywords || [],
         suggestedTitle: parsed.suggestedTitle || '',
         detectedSeason: parsed.detectedSeason || null,
+        detectedElements: parsed.detectedElements || {},
         contentSafety: parsed.contentSafety || { isSafe:true, flags:[], type:'man, woman, youth, girls' },
         designColor: parsed.designColor || { mainColor:'dark', recommendedColors:['White','Black'] },
         bulletPoint1: parsed.bulletPoint1 || '',
         bulletPoint2: parsed.bulletPoint2 || '',
-        description: parsed.description || ''
+        description: parsed.description || '',
+        suggestedBrand: parsed.suggestedBrand || ''
       };
     } catch(e) {}
   }
@@ -1126,9 +1280,10 @@ function parseAIResponse(content) {
     keywords,
     suggestedTitle: keywords[0] || 'T-Shirt Design',
     detectedSeason: null,
+    detectedElements: {},
     contentSafety: { isSafe:true, flags:[], type:'man, woman, youth, girls' },
     designColor: { mainColor:'dark', recommendedColors:['White','Black'] },
-    bulletPoint1:'', bulletPoint2:'', description:''
+    bulletPoint1:'', bulletPoint2:'', description:'', suggestedBrand:''
   };
 }
 
@@ -1329,6 +1484,7 @@ async function generateKeywords() {
       result.keywords = ai.keywords || [];
       result.title = (ai.suggestedTitle || '').substring(0,60);
       result.detectedSeason = ai.detectedSeason;
+      result.detectedElements = ai.detectedElements || {};
       result.contentSafety = ai.contentSafety;
       result.type = ai.contentSafety?.type || 'man, woman, youth, girls';
       result.colors = ai.designColor?.recommendedColors || [];
@@ -1336,6 +1492,11 @@ async function generateKeywords() {
       result.bulletPoint1 = (ai.bulletPoint1 || '').substring(0,250);
       result.bulletPoint2 = (ai.bulletPoint2 || '').substring(0,250);
       result.description = (ai.description || '').substring(0,2000);
+
+      // Brand logic - AI brand takes precedence if toggle is on
+      if(document.getElementById('toggleAIBrand').checked && ai.suggestedBrand) {
+        result.brand = ai.suggestedBrand.substring(0,50);
+      }
 
       result.status = 'filtering';
       renderResults();
@@ -1427,7 +1588,7 @@ async function generateKeywords() {
 function renderResults() {
   const tbody = document.getElementById('resultsBody');
   if(!results.length) {
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--muted)">เลือกรูปและกด "สร้าง Keywords" เพื่อเริ่มต้น</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;padding:30px;color:var(--muted)">เลือกรูปและกด "สร้าง Keywords" เพื่อเริ่มต้น</td></tr>';
     return;
   }
 
@@ -1440,36 +1601,23 @@ function renderResults() {
     else if(r.status === 'done') statusBadge = '<span class="badge badge-green">✓</span>';
     else statusBadge = '<span class="badge badge-red">✗</span>';
 
-    // Keywords HTML
-    let kwHTML = '';
-    if(r.removedKeywords.length > 0) {
-      kwHTML += r.removedKeywords.map(rk => `<span class="kw-tag invalid" title="${rk.reason}">✗ ${rk.kw}</span>`).join(' ');
-    }
-    if(r.amazonResults.length > 0) {
-      kwHTML += r.amazonResults.map(ar => {
-        if(ar.valid) {
-          const tierLabel = ar.tier===1?'✓':ar.tier===2?'≈':'↯';
-          const cls = ar.tier===1?'valid':ar.tier===2?'replaced':'replaced';
-          const title = ar.originalKeyword ? `เดิม: ${ar.originalKeyword} → ใหม่: ${ar.keyword} (Score:${ar.score})` : `Score: ${ar.score}`;
-          return `<span class="kw-tag ${cls}" title="${title}">${tierLabel} ${ar.keyword}</span><a href="${getAmazonSearchURL(ar.keyword)}" target="_blank" class="amazon-link">🔍</a>`;
-        } else {
-          return `<span class="kw-tag invalid" title="ไม่พบบน Amazon">✗ ${ar.keyword}</span>`;
-        }
-      }).join(' ');
-    } else if(r.keywords.length > 0 && r.status !== 'done') {
-      kwHTML = r.keywords.map(k => `<span class="kw-tag">${k}</span>`).join(' ');
-    }
-
-    // Season badge
-    if(r.detectedSeason) {
-      kwHTML = `<span class="season-badge">🎄 ${r.detectedSeason}</span> ` + kwHTML;
-    }
-
     // Type badge
     const typeHTML = r.type ? (r.contentSafety && !r.contentSafety.isSafe
       ? `<span class="safety-restricted" title="พบเนื้อหาจำกัด: ${(r.contentSafety.flags||[]).join(', ')}">${r.type}</span>`
       : `<span class="safety-safe">${r.type}</span>`)
       : '-';
+
+    // BP1 column
+    const bp1Class = collapsedCols.bp1 ? 'td-collapsed' : '';
+    const bp1HTML = collapsedCols.bp1 ? '' : `<div contenteditable="true" class="editable-cell" oninput="results[${i}].bulletPoint1=this.textContent.substring(0,250)">${r.bulletPoint1||''}</div><span class="char-count ${(r.bulletPoint1||'').length>250?'char-over':'char-ok'}">${(r.bulletPoint1||'').length}/250</span>`;
+
+    // BP2 column
+    const bp2Class = collapsedCols.bp2 ? 'td-collapsed' : '';
+    const bp2HTML = collapsedCols.bp2 ? '' : `<div contenteditable="true" class="editable-cell" oninput="results[${i}].bulletPoint2=this.textContent.substring(0,250)">${r.bulletPoint2||''}</div><span class="char-count ${(r.bulletPoint2||'').length>250?'char-over':'char-ok'}">${(r.bulletPoint2||'').length}/250</span>`;
+
+    // Description column
+    const descClass = collapsedCols.desc ? 'td-collapsed' : '';
+    const descHTML = collapsedCols.desc ? '' : `<div contenteditable="true" class="editable-cell" style="max-height:80px;overflow-y:auto" oninput="results[${i}].description=this.textContent.substring(0,2000)">${r.description||''}</div><span class="char-count ${(r.description||'').length>2000?'char-over':'char-ok'}">${(r.description||'').length}/2000</span>`;
 
     // Colors
     const colorsHTML = r.colors.length > 0
@@ -1482,8 +1630,8 @@ function renderResults() {
 
     return `<tr>
       <td>${i+1}</td>
-      <td><img src="${r.imageUrl}" style="width:45px;height:45px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="previewImage('${r.imageUrl}')"></td>
-      <td style="font-size:10px;word-break:break-all">${r.imagePath}</td>
+      <td><img src="${r.imageUrl}" style="width:70px;height:70px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="previewImage('${r.imageUrl}')"></td>
+      <td style="font-size:20px;word-break:break-all">${r.imagePath}</td>
       <td>
         <div contenteditable="true" class="editable-cell" oninput="results[${i}].title=this.textContent.substring(0,60)">${r.title}</div>
         <span class="char-count ${tLen>60?'char-over':'char-ok'}">${tLen}/60</span>
@@ -1491,8 +1639,10 @@ function renderResults() {
       <td>
         <div contenteditable="true" class="editable-cell" oninput="results[${i}].brand=this.textContent.substring(0,50)">${r.brand}</div>
       </td>
-      <td style="font-size:10px">${typeHTML}</td>
-      <td style="max-width:180px">${kwHTML}</td>
+      <td style="font-size:20px">${typeHTML}</td>
+      <td class="${bp1Class}">${bp1HTML}</td>
+      <td class="${bp2Class}">${bp2HTML}</td>
+      <td class="${descClass}">${descHTML}</td>
       <td style="max-width:120px">${colorsHTML}</td>
       <td>${statusBadge}${r.error?'<br><small style="color:var(--red)">'+r.error+'</small>':''}</td>
     </tr>`;
@@ -1519,53 +1669,49 @@ function clearResults() {
 // ============================================================
 function exportExcel() {
   if(!results.length) return;
-
-  // Header row
-  const headers = ['Image Path','Title','Brand','Type','Bullet Point 1','Bullet Point 2','Description','Keywords (Valid)','All Keywords','Status'];
-  // Add Color1 - Color34
-  for(let c=1;c<=34;c++) headers.push('Color'+c);
-
+  const headers = [
+    'Image Path','Input Language','Title','Description','Tags','Type','Color','',
+    'Brand','Bullet Points 1','Bullet Points 2',
+    'Color1','Color2','Color3','Color4','Color5','Color6','Color7','Color8','Color9','Color10',
+    'Color11','Color12','Color13','Color14','Color15','Color16','Color17','Color18','Color19','Color20',
+    'Color21','Color22','Color23','Color24','Color25','Color26','Color27','Color28','Color29','Color30',
+    'Color31','Color32','Color33','Color34',
+    'Product','Marketplace','Price US','Price GB','Price DE','Price FR','Price IT','Price ES','Price JP',
+    'Print','Draft','Auto Translate','','Collection','Category','Background Color (Hex)'
+  ];
   const wsData = [headers];
-
   results.forEach(r => {
+    const validKWs = r.validKeywords.map(k => k.replace(/ T-Shirt$/i,'')).join(', ');
     const row = [
       r.imagePath,
+      'EN',
       r.title,
-      r.brand,
-      r.type,
-      r.bulletPoint1 || '',
-      r.bulletPoint2 || '',
       r.description || '',
-      r.validKeywords.join(', '),
-      r.keywords.join(', '),
-      r.status === 'done' ? 'Success' : 'Error'
+      validKWs,
+      r.type,
+      r.colors[0] ? r.colors[0].toLowerCase().replace(/\s+/g,'_') : 'black',
+      '',
+      r.brand,
+      r.bulletPoint1 || '',
+      r.bulletPoint2 || ''
     ];
-    // Add colors to Color1-Color34 columns
-    for(let c=0;c<34;c++) {
-      row.push(r.colors[c] || '');
-    }
+    for(let c=0;c<34;c++) row.push(r.colors[c] ? r.colors[c].toLowerCase().replace(/\s+/g,'_') : '');
+    row.push('Standard t-shirt','US','15.99','','','','','','','','','','','','','');
     wsData.push(row);
   });
-
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.aoa_to_sheet(wsData);
-
-  // Column widths
-  const colWidths = [
-    {wch:25},{wch:60},{wch:20},{wch:25},{wch:40},{wch:40},{wch:60},{wch:50},{wch:50},{wch:10}
-  ];
+  const colWidths = [{wch:25},{wch:12},{wch:60},{wch:60},{wch:50},{wch:25},{wch:16},{wch:3},{wch:20},{wch:40},{wch:40}];
   for(let c=0;c<34;c++) colWidths.push({wch:16});
+  colWidths.push({wch:18},{wch:12},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:8},{wch:8},{wch:14},{wch:3},{wch:14},{wch:14},{wch:20});
   ws['!cols'] = colWidths;
-
-  XLSX.utils.book_append_sheet(wb, ws, 'Merch Keywords');
-
-  // สร้างไฟล์ใหม่เสมอ (timestamp unique)
+  XLSX.utils.book_append_sheet(wb, ws, 'ชีต1');
   const now = new Date();
   const dateStr = now.toISOString().slice(0,10).replace(/-/g,'');
   const timeStr = now.toTimeString().slice(0,8).replace(/:/g,'');
   const filename = `Amazon_Merch_Keywords_${dateStr}_${timeStr}.xlsx`;
   XLSX.writeFile(wb, filename);
-  showStatus(`📥 Export สำเร็จ: ${filename}`, 'success');
+  showStatus('📥 Export สำเร็จ: '+filename, 'success');
 }
 
 // ============================================================
@@ -1613,7 +1759,7 @@ function renderRejectedDB() {
 function populateSeasonSelect() {
   const sel = document.getElementById('seasonSelect');
   const db = DB.getSeasonal();
-  sel.innerHTML = '<option value="">-- เลือกเทศกาล --</option>' + db.map(s => {
+  sel.innerHTML = '<option value="">-- เลือกกลุ่ม Keyword --</option>' + db.map(s => {
     const now = new Date().getMonth()+1;
     const active = s.activeMonths.includes(now);
     return `<option value="${s.id}">${active?'🟢':'⚪'} ${s.season}</option>`;
@@ -1639,22 +1785,43 @@ function deleteSeasonalKW(sid, kw) {
   const s = db.find(x => x.id === sid);
   if(s) {
     s.keywords = s.keywords.filter(k => k !== kw);
+    if(s.requiredForTitle) s.requiredForTitle = s.requiredForTitle.filter(k => k !== kw);
     DB.setSeasonal(db);
     renderSeasonalDB();
   }
 }
 
-function addNewSeason() {
-  const name = prompt('ชื่อเทศกาลใหม่:');
-  if(!name) return;
-  const months = prompt('เดือนที่ active (เช่น 1,2,3):');
-  if(!months) return;
+function toggleRequiredKW(sid, kw) {
   const db = DB.getSeasonal();
+  const s = db.find(x => x.id === sid);
+  if(s) {
+    if(!s.requiredForTitle) s.requiredForTitle = [];
+    if(s.requiredForTitle.includes(kw)) {
+      s.requiredForTitle = s.requiredForTitle.filter(k => k !== kw);
+    } else {
+      s.requiredForTitle.push(kw);
+    }
+    DB.setSeasonal(db);
+    renderSeasonalDB();
+  }
+}
+
+function getRequiredTitleKeywords() {
+  const db = DB.getSeasonal();
+  return db.flatMap(s => s.requiredForTitle || []);
+}
+
+function addNewSeason() {
+  const name = prompt('ชื่อกลุ่ม Keyword ใหม่ (เช่น Christmas, Birthday, Valentine):');
+  if(!name) return;
+  const months = prompt('เดือนที่ active (เช่น 1,2,3 หรือเว้นว่างถ้าใช้ได้ตลอด):');
+  const db = DB.getSeasonal();
+  const parsedMonths = months ? months.split(',').map(m => parseInt(m.trim())).filter(m => m>=1 && m<=12) : [1,2,3,4,5,6,7,8,9,10,11,12];
   db.push({
     id: 's_'+Date.now(),
     season: name,
     keywords: [],
-    activeMonths: months.split(',').map(m => parseInt(m.trim())).filter(m => m>=1 && m<=12)
+    activeMonths: parsedMonths
   });
   DB.setSeasonal(db);
   populateSeasonSelect();
@@ -1662,7 +1829,7 @@ function addNewSeason() {
 }
 
 function deleteSeason(sid) {
-  if(!confirm('ลบเทศกาลนี้?')) return;
+  if(!confirm('ลบกลุ่ม Keyword นี้?')) return;
   const db = DB.getSeasonal().filter(s => s.id !== sid);
   DB.setSeasonal(db);
   populateSeasonSelect();
@@ -1675,27 +1842,34 @@ function renderSeasonalDB() {
   const sid = document.getElementById('seasonSelect')?.value;
   const monthNames = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-  let html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">';
+  let html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px">';
 
   const toShow = sid ? db.filter(s=>s.id===sid) : db;
   toShow.forEach(s => {
     const active = s.activeMonths.includes(now);
-    html += `<div class="panel" style="margin:0;border-color:${active?'var(--green)':'var(--border)'}">
+    html += `<div class="panel" style="margin:0;padding:20px;border-color:${active?'var(--green)':'var(--border)'}">
       <div class="flex-between mb8">
         <div>
-          <strong style="color:${active?'var(--green)':'var(--text)'}">${active?'🟢':'⚪'} ${s.season}</strong>
-          <br><small style="color:var(--muted)">Months: ${s.activeMonths.map(m=>monthNames[m]).join(', ')}</small>
+          <strong style="font-size:20px;color:${active?'var(--green)':'var(--text)'}">${active?'🟢':'⚪'} ${s.season}</strong>
+          <br><small style="color:var(--muted);font-size:16px">Months: ${s.activeMonths.map(m=>monthNames[m]).join(', ')}</small>
         </div>
         <button class="btn btn-sm btn-red" onclick="deleteSeason('${s.id}')">🗑️</button>
       </div>
-      <div style="max-height:150px;overflow-y:auto">
-        ${s.keywords.map(k => `<div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:12px">${k}</span>
-          <button class="btn btn-sm btn-red" style="padding:2px 6px" onclick="deleteSeasonalKW('${s.id}','${k.replace(/'/g,"\\'")}')">✗</button>
-        </div>`).join('')}
-        ${s.keywords.length===0?'<div style="color:var(--muted);font-size:12px;padding:8px">ยังไม่มี keywords</div>':''}
+      <div style="max-height:280px;overflow-y:auto">
+        ${s.keywords.map(k => {
+          const isReq = (s.requiredForTitle||[]).includes(k);
+          const esc = k.replace(/'/g,"\\'");
+          return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:18px;${isReq?'color:var(--green);font-weight:bold':''}">${isReq?'⭐ ':''}${k}</span>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-sm ${isReq?'btn-blue':'btn-green'}" style="padding:4px 12px;font-size:18px" onclick="toggleRequiredKW('${s.id}','${esc}')" title="${isReq?'นำออกจาก Title บังคับ':'เพิ่มใน Title ทุกรูป'}">${isReq?'⭐':'➕'}</button>
+            <button class="btn btn-sm btn-red" style="padding:4px 10px;font-size:18px" onclick="deleteSeasonalKW('${s.id}','${esc}')">✗</button>
+          </div>
+        </div>`;
+        }).join('')}
+        ${s.keywords.length===0?'<div style="color:var(--muted);font-size:18px;padding:10px">ยังไม่มี keywords</div>':''}
       </div>
-      <div style="margin-top:6px;font-size:11px;color:var(--muted)">${s.keywords.length} keywords</div>
+      <div style="margin-top:8px;font-size:16px;color:var(--muted)">${s.keywords.length} keywords${(s.requiredForTitle||[]).length>0?' · <span style="color:var(--green)">⭐ '+((s.requiredForTitle||[]).length)+' บังคับใน Title</span>':''}</div>
     </div>`;
   });
   html += '</div>';
@@ -1729,20 +1903,41 @@ function deleteTrademark(id) {
   updateSettingsStats();
 }
 
+// Trademark search — open external websites
+const TM_URLS = {
+  uspto: (q) => `https://tmsearch.uspto.gov/bin/showfield?f=tess&state=4810:1.1.1&p_search=searchss&p_s_All=${encodeURIComponent(q)}&a_default=search&a_search=Submit+Query&f=tess&state=4810:1.1.1`,
+  trademarkia: (q) => `https://www.trademarkia.com/trademarks-search.aspx?tn=${encodeURIComponent(q)}`,
+  euipo: (q) => `https://www.tmdn.org/tmview/#/tmview/results?page=1&pageSize=30&criteria=C&basicSearch=${encodeURIComponent(q)}`,
+  wipo: (q) => `https://branddb.wipo.int/en/quicksearch?by=brandName&v=${encodeURIComponent(q)}`
+};
+
+function searchTM(site, term) {
+  const q = term || document.getElementById('tmQuickSearch')?.value?.trim();
+  if(!q) { showStatus('⚠️ กรุณาพิมพ์คำที่ต้องการค้นหา','error'); return; }
+  const url = TM_URLS[site]?.(q);
+  if(url) window.open(url, '_blank');
+}
+
+function searchTMAll(term) {
+  if(!term) return;
+  window.open(TM_URLS.trademarkia(term), '_blank');
+}
+
 function renderTrademarkDB() {
   const search = (document.getElementById('tmSearch')?.value || '').toLowerCase();
   const db = DB.getTrademark().filter(t => !search || t.term.toLowerCase().includes(search) || (t.category||'').toLowerCase().includes(search));
   const total = DB.getTrademark().length;
   document.getElementById('tmCount').textContent = total + ' รายการ';
   document.getElementById('tmBody').innerHTML = db.length === 0
-    ? '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted)">ยังไม่มี trademark</td></tr>'
+    ? '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--muted)">ยังไม่มี trademark</td></tr>'
     : db.slice(0,200).map((t,i) => `<tr>
         <td>${i+1}</td>
-        <td>${t.term}</td>
+        <td><strong>${t.term}</strong></td>
         <td><span class="badge badge-blue">${t.category||'brand'}</span></td>
         <td>${t.dateAdded||'-'}</td>
+        <td><button class="btn btn-sm" style="background:var(--blue);color:#fff;padding:4px 8px" onclick="searchTMAll('${t.term.replace(/'/g,"\\'")}')">🔍</button></td>
         <td><button class="btn btn-sm btn-red" onclick="deleteTrademark('${t.id}')">✗</button></td>
-      </tr>`).join('') + (db.length>200?`<tr><td colspan="5" style="text-align:center;color:var(--muted)">แสดง 200/${db.length} รายการ</td></tr>`:'');
+      </tr>`).join('') + (db.length>200?`<tr><td colspan="6" style="text-align:center;color:var(--muted)">แสดง 200/${db.length} รายการ</td></tr>`:'');
 }
 
 // ============================================================
@@ -1757,9 +1952,9 @@ function renderHistoryDB() {
     : db.slice(0,100).map((h,i) => `<tr>
         <td>${i+1}</td>
         <td>${h.dateCreated}</td>
-        <td style="font-size:10px">${h.imagePath}</td>
-        <td style="font-size:11px">${h.title}</td>
-        <td style="font-size:10px">${h.type||'-'}</td>
+        <td style="font-size:20px">${h.imagePath}</td>
+        <td style="font-size:22px">${h.title}</td>
+        <td style="font-size:20px">${h.type||'-'}</td>
         <td><span class="badge badge-green">${(h.keywords||[]).length} kw</span></td>
         <td><span class="badge badge-blue">${(h.colors||[]).length} สี</span></td>
         <td>${h.season?`<span class="season-badge">${h.season}</span>`:'✅'}</td>
@@ -1861,7 +2056,7 @@ function importAllDB() {
 }
 
 function resetAllDB() {
-  if(!confirm('⚠️ ล้างข้อมูลทั้งหมด? (Rejected, Seasonal, Trademark, History)')) return;
+  if(!confirm('⚠️ ล้างข้อมูลทั้งหมด? (Rejected, Keywords, Trademark, History)')) return;
   if(!confirm('แน่ใจหรือ? ข้อมูลจะหายทั้งหมดและไม่สามารถกู้คืนได้')) return;
   localStorage.removeItem('merch_rejected');
   localStorage.removeItem('merch_seasonal');
@@ -1988,7 +2183,7 @@ async function initSupabaseTables() {
     const { data, error } = await supabaseClient.from('merch_data').select('id').limit(1);
     if(error && error.code === '42P01') {
       // Table doesn't exist - need to create via SQL editor in Supabase dashboard
-      showSupabaseStatus('⚠️ ตาราง merch_data ยังไม่มี กรุณาสร้างใน Supabase Dashboard:<br><code style="font-size:10px;display:block;margin-top:4px;padding:6px;background:var(--card2);border-radius:4px;white-space:pre-wrap">CREATE TABLE merch_data (\n  id TEXT PRIMARY KEY DEFAULT \'main\',\n  rejected JSONB DEFAULT \'[]\'::jsonb,\n  seasonal JSONB DEFAULT \'[]\'::jsonb,\n  trademark JSONB DEFAULT \'[]\'::jsonb,\n  history JSONB DEFAULT \'[]\'::jsonb,\n  settings JSONB DEFAULT \'{}\'::jsonb,\n  updated_at TIMESTAMPTZ DEFAULT NOW()\n);\nALTER TABLE merch_data ENABLE ROW LEVEL SECURITY;\nCREATE POLICY "Allow anon access" ON merch_data FOR ALL USING (true);</code>','info');
+      showSupabaseStatus('⚠️ ตาราง merch_data ยังไม่มี กรุณาสร้างใน Supabase Dashboard:<br><code style="font-size:20px;display:block;margin-top:4px;padding:6px;background:var(--card2);border-radius:4px;white-space:pre-wrap">CREATE TABLE merch_data (\n  id TEXT PRIMARY KEY DEFAULT \'main\',\n  rejected JSONB DEFAULT \'[]\'::jsonb,\n  seasonal JSONB DEFAULT \'[]\'::jsonb,\n  trademark JSONB DEFAULT \'[]\'::jsonb,\n  history JSONB DEFAULT \'[]\'::jsonb,\n  settings JSONB DEFAULT \'{}\'::jsonb,\n  updated_at TIMESTAMPTZ DEFAULT NOW()\n);\nALTER TABLE merch_data ENABLE ROW LEVEL SECURITY;\nCREATE POLICY "Allow anon access" ON merch_data FOR ALL USING (true);</code>','info');
     } else if(!error) {
       showSupabaseStatus('✅ เชื่อมต่อสำเร็จ! ตาราง merch_data พร้อมใช้งาน','success');
     } else {
@@ -2060,6 +2255,15 @@ function loadSupabaseSettings() {
 
 init();
 loadSupabaseSettings();
+
+// === PWA Service Worker Registration ===
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('SW registered:', reg.scope))
+      .catch(err => console.log('SW registration failed:', err));
+  });
+}
 </script>
 </body>
 </html>
