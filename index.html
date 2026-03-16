@@ -299,7 +299,8 @@ tr:hover td { background:rgba(255,153,0,.03); }
           <span id="imgCount">ยังไม่ได้เลือกรูป</span>
           <div class="flex-gap">
             <button class="btn btn-sm btn-blue" onclick="selectAllImages()">เลือกทั้งหมด</button>
-            <button class="btn btn-sm btn-red" onclick="deselectAllImages()">ยกเลิก</button>
+            <button class="btn btn-sm btn-red" onclick="deleteSelectedImages()" title="ลบรูปที่เลือกออกจากโปรแกรม">🗑️ ลบ</button>
+            <button class="btn btn-sm btn-red" onclick="deselectAllImages()" style="background:var(--muted)">ยกเลิก</button>
           </div>
         </div>
         <div class="images-grid" id="imagesGrid"></div>
@@ -1011,9 +1012,42 @@ function renderImages() {
 function selectAllImages() { uploadedImages.forEach(i => i.selected = true); renderImages(); }
 function deselectAllImages() { uploadedImages.forEach(i => i.selected = false); renderImages(); }
 function deleteImage(idx) {
-  URL.revokeObjectURL(uploadedImages[idx].url);
+  const img = uploadedImages[idx];
+  // Also remove matching result from results table
+  const rIdx = results.findIndex(r => r.imagePath === img.name && r.imageUrl === img.url);
+  if(rIdx !== -1) results.splice(rIdx, 1);
+  URL.revokeObjectURL(img.url);
   uploadedImages.splice(idx, 1);
   renderImages();
+  renderResults();
+  refreshStats();
+}
+function deleteSelectedImages() {
+  const selected = uploadedImages.filter(i => i.selected);
+  if(!selected.length) { showStatus('⚠️ ยังไม่ได้เลือกรูปที่จะลบ', 'error'); return; }
+  if(!confirm(`ต้องการลบ ${selected.length} รูปที่เลือกออกจากโปรแกรม?`)) return;
+  // Remove matching results
+  selected.forEach(img => {
+    const rIdx = results.findIndex(r => r.imagePath === img.name && r.imageUrl === img.url);
+    if(rIdx !== -1) results.splice(rIdx, 1);
+    URL.revokeObjectURL(img.url);
+  });
+  // Keep only unselected images
+  uploadedImages = uploadedImages.filter(i => !i.selected);
+  renderImages();
+  renderResults();
+  refreshStats();
+  showStatus(`🗑️ ลบ ${selected.length} รูปเรียบร้อย`, 'success');
+}
+function refreshStats() {
+  if(!results.length) {
+    document.getElementById('statsBar').classList.add('hidden');
+    document.getElementById('btnExport').disabled = true;
+    document.getElementById('btnClear').disabled = true;
+    return;
+  }
+  document.getElementById('statTotal').textContent = results.length;
+  document.getElementById('statDone').textContent = results.filter(r=>r.status==='done').length;
 }
 function previewImage(url) {
   document.getElementById('previewImg').src = url;
