@@ -1597,9 +1597,13 @@ async function generateKeywords() {
       result.type = ai.contentSafety?.type || 'man, woman, youth, girls';
       result.colors = ai.designColor?.recommendedColors || [];
       result.designColorType = ai.designColor?.mainColor || 'unknown';
-      result.bulletPoint1 = (ai.bulletPoint1 || '').substring(0,250);
-      result.bulletPoint2 = (ai.bulletPoint2 || '').substring(0,250);
-      result.description = (ai.description || '').substring(0,2000);
+      // Respect Content Options toggles — only store content if toggle is ON
+      const bp1Active = document.getElementById('toggleBP1').checked;
+      const bp2Active = document.getElementById('toggleBP2').checked;
+      const descActive = document.getElementById('toggleDesc').checked;
+      result.bulletPoint1 = bp1Active ? (ai.bulletPoint1 || '').substring(0,250) : '';
+      result.bulletPoint2 = bp2Active ? (ai.bulletPoint2 || '').substring(0,250) : '';
+      result.description = descActive ? (ai.description || '').substring(0,2000) : '';
 
       // Brand logic - AI brand takes precedence if toggle is on
       if(document.getElementById('toggleAIBrand').checked && ai.suggestedBrand) {
