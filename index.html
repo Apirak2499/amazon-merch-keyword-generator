@@ -120,6 +120,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
 .status-info { background:rgba(59,130,246,.1); border:1px solid rgba(59,130,246,.3); color:var(--blue); }
 .status-success { background:rgba(34,197,94,.1); border:1px solid rgba(34,197,94,.3); color:var(--green); }
 .status-error { background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); color:var(--red); }
+.status-warning { background:rgba(234,179,8,.1); border:1px solid rgba(234,179,8,.3); color:var(--yellow); }
 
 /* Editable */
 .editable-cell { background:var(--card2); border:1px solid transparent; border-radius:3px; padding:6px 10px; min-height:34px; outline:none; font-size:16px; color:var(--text); }
@@ -318,6 +319,9 @@ tr:hover td { background:rgba(255,153,0,.03); }
             <button class="btn btn-green" onclick="generateKeywords()" id="btnGenerate" disabled style="position:relative;box-shadow:0 0 20px rgba(34,197,94,.3)">
               🚀 สร้าง Keyword
             </button>
+            <button class="btn btn-red" onclick="stopGeneration()" id="btnStop" style="display:none">⏹ Stop</button>
+            <button class="btn" onclick="pauseGeneration()" id="btnPause" style="display:none;background:#eab308;color:#000">⏸ Pause</button>
+            <button class="btn btn-green" onclick="resumeGeneration()" id="btnResume" style="display:none">▶ Resume</button>
             <button class="btn btn-primary" onclick="exportExcel()" id="btnExport" disabled>📥 Export Excel</button>
             <button class="btn btn-red" onclick="clearResults()" id="btnClear" disabled>🗑️ ล้าง</button>
           </div>
@@ -554,6 +558,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
     <div style="display:flex;gap:8px;margin-bottom:12px">
       <input type="text" id="tmInput" placeholder="คำ Trademark..." style="flex:2">
       <select id="tmCategory" style="width:150px">
+        <option value="banned">🚫 Banned Word</option>
         <option value="brand">Brand</option>
         <option value="character">Character</option>
         <option value="slogan">Slogan</option>
@@ -1288,17 +1293,48 @@ function parseAIResponse(content) {
 }
 
 // ============================================================
-// KEYWORD FILTERING (Trademark + Rejected + Duplicate)
+// BANNED WORDS LIST (loaded from settings or hardcoded)
+// ============================================================
+const BANNED_TITLE_WORDS = ['gift','design','premium','olympic','olympics'];
+
+function getBannedWords() {
+  // Combine hardcoded list + trademark DB terms
+  const tm = DB.getTrademark();
+  const banned = [...BANNED_TITLE_WORDS];
+  tm.forEach(t => {
+    if(!banned.includes(t.term.toLowerCase())) banned.push(t.term.toLowerCase());
+  });
+  return banned;
+}
+
+function filterBannedFromTitle(title) {
+  if(!title) return title;
+  const banned = getBannedWords();
+  let filtered = title;
+  banned.forEach(bw => {
+    const regex = new RegExp('\\b' + bw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'gi');
+    filtered = filtered.replace(regex, '').replace(/\s{2,}/g, ' ').trim();
+  });
+  return filtered.substring(0, 60);
+}
+
+// ============================================================
+// KEYWORD FILTERING (Trademark + Rejected + Banned + Duplicate)
 // ============================================================
 function filterKeywords(keywords) {
   const tm = DB.getTrademark();
   const rej = DB.getRejected();
   const hist = DB.getHistory();
+  const banned = getBannedWords();
   const filtered = [];
   const removed = [];
 
   keywords.forEach(kw => {
     const kwLower = kw.toLowerCase();
+
+    // Check banned words
+    const bannedMatch = banned.find(bw => kwLower.includes(bw));
+    if(bannedMatch) { removed.push({kw, reason:'Banned: '+bannedMatch}); return; }
 
     // Check trademark
     const tmMatch = tm.find(t => kwLower.includes(t.term.toLowerCase()));
@@ -1431,6 +1467,50 @@ function getAmazonSearchURL(kw) {
 }
 
 // ============================================================
+// GENERATION CONTROL (Stop / Pause / Resume)
+// ============================================================
+let genStopped = false;
+let genPaused = false;
+let genPauseResolve = null;
+
+function stopGeneration() {
+  genStopped = true;
+  genPaused = false;
+  if(genPauseResolve) { genPauseResolve(); genPauseResolve = null; }
+  document.getElementById('btnStop').style.display = 'none';
+  document.getElementById('btnPause').style.display = 'none';
+  document.getElementById('btnResume').style.display = 'none';
+  showStatus('⏹ หยุดการสร้าง Keyword แล้ว','error');
+}
+
+function pauseGeneration() {
+  genPaused = true;
+  document.getElementById('btnPause').style.display = 'none';
+  document.getElementById('btnResume').style.display = '';
+  document.getElementById('progressText').textContent += ' ⏸ PAUSED';
+  showStatus('⏸ หยุดชั่วคราว — กด Resume เพื่อทำต่อ','warning');
+}
+
+function resumeGeneration() {
+  genPaused = false;
+  document.getElementById('btnResume').style.display = 'none';
+  document.getElementById('btnPause').style.display = '';
+  if(genPauseResolve) { genPauseResolve(); genPauseResolve = null; }
+  showStatus('▶ ทำงานต่อแล้ว','success');
+}
+
+function waitIfPaused() {
+  if(!genPaused) return Promise.resolve();
+  return new Promise(resolve => { genPauseResolve = resolve; });
+}
+
+function showGenControls(show) {
+  document.getElementById('btnStop').style.display = show ? '' : 'none';
+  document.getElementById('btnPause').style.display = show ? '' : 'none';
+  document.getElementById('btnResume').style.display = 'none';
+}
+
+// ============================================================
 // MAIN GENERATE FUNCTION
 // ============================================================
 async function generateKeywords() {
@@ -1439,16 +1519,28 @@ async function generateKeywords() {
 
   const brand = document.getElementById('brandName').value || 'My Brand';
 
+  // Reset control flags
+  genStopped = false;
+  genPaused = false;
+  genPauseResolve = null;
+
   document.getElementById('btnGenerate').disabled = true;
   document.getElementById('progressArea').classList.remove('hidden');
   document.getElementById('btnExport').disabled = true;
   document.getElementById('btnClear').disabled = true;
   document.getElementById('statsBar').classList.remove('hidden');
+  showGenControls(true);
 
   results = [];
   let totalValidKW = 0, totalFilteredKW = 0;
 
   for(let idx = 0; idx < selected.length; idx++) {
+    // Check stop
+    if(genStopped) break;
+    // Check pause
+    await waitIfPaused();
+    if(genStopped) break;
+
     const img = selected[idx];
     const pct = Math.round((idx / selected.length) * 100);
     document.getElementById('progressFill').style.width = pct+'%';
@@ -1478,6 +1570,9 @@ async function generateKeywords() {
 
     try {
       // Step 1: AI Analysis
+      if(genStopped) break;
+      await waitIfPaused();
+      if(genStopped) break;
       document.getElementById('progressText').textContent = `(${idx+1}/${selected.length}) 🤖 AI กำลังวิเคราะห์รูป...`;
       const ai = await analyzeImage(img.file);
 
@@ -1498,10 +1593,16 @@ async function generateKeywords() {
         result.brand = ai.suggestedBrand.substring(0,50);
       }
 
+      // Filter banned words from title immediately
+      result.title = filterBannedFromTitle(result.title);
+
       result.status = 'filtering';
       renderResults();
 
       // Step 2: Filter keywords
+      if(genStopped) break;
+      await waitIfPaused();
+      if(genStopped) break;
       document.getElementById('progressText').textContent = `(${idx+1}/${selected.length}) 🔍 กรอง Trademark/Rejected...`;
       const { filtered, removed } = filterKeywords(result.keywords);
       result.removedKeywords = removed;
@@ -1517,6 +1618,10 @@ async function generateKeywords() {
       result.validKeywords = [];
 
       for(let ki = 0; ki < withSeasonal.length; ki++) {
+        if(genStopped) break;
+        await waitIfPaused();
+        if(genStopped) break;
+
         const kw = withSeasonal[ki];
         document.getElementById('progressText').textContent = `(${idx+1}/${selected.length}) 🔎 Amazon check: ${kw} (${ki+1}/${withSeasonal.length})`;
 
@@ -1531,13 +1636,15 @@ async function generateKeywords() {
         await sleep(200);
       }
 
+      if(genStopped) { result.status = 'stopped'; renderResults(); break; }
+
       totalValidKW += result.validKeywords.length;
 
       // Update title if we have valid keywords
       if(result.validKeywords.length > 0) {
         const best = result.amazonResults.filter(r=>r.valid).sort((a,b)=>b.score-a.score);
         if(best.length > 0 && !result.title) {
-          result.title = best[0].keyword.substring(0,60);
+          result.title = filterBannedFromTitle(best[0].keyword.substring(0,60));
         }
       }
 
@@ -1572,12 +1679,21 @@ async function generateKeywords() {
   }
 
   document.getElementById('progressFill').style.width = '100%';
-  document.getElementById('progressText').textContent = `✅ เสร็จสิ้น! ประมวลผล ${selected.length} รูป`;
+  if(genStopped) {
+    document.getElementById('progressText').textContent = `⏹ หยุดแล้ว — ประมวลผลได้ ${results.filter(r=>r.status==='done').length}/${selected.length} รูป`;
+  } else {
+    document.getElementById('progressText').textContent = `✅ เสร็จสิ้น! ประมวลผล ${selected.length} รูป`;
+  }
   document.getElementById('btnGenerate').disabled = false;
   document.getElementById('btnExport').disabled = false;
   document.getElementById('btnClear').disabled = false;
+  showGenControls(false);
 
-  showStatus('✅ สร้าง Keywords สำเร็จ '+results.length+' รูป (Valid: '+totalValidKW+', Filtered: '+totalFilteredKW+')','success');
+  const doneCount = results.filter(r=>r.status==='done').length;
+  showStatus(genStopped
+    ? '⏹ หยุดสร้าง Keywords — สำเร็จ '+doneCount+' รูป (Valid: '+totalValidKW+', Filtered: '+totalFilteredKW+')'
+    : '✅ สร้าง Keywords สำเร็จ '+results.length+' รูป (Valid: '+totalValidKW+', Filtered: '+totalFilteredKW+')',
+    genStopped ? 'warning' : 'success');
   renderHistoryDB();
   updateSettingsStats();
 }
@@ -1599,6 +1715,7 @@ function renderResults() {
     else if(r.status === 'filtering') statusBadge = '<span class="badge badge-blue"><span class="spinner"></span> กรอง</span>';
     else if(r.status === 'validating') statusBadge = '<span class="badge badge-yellow"><span class="spinner"></span> Amazon</span>';
     else if(r.status === 'done') statusBadge = '<span class="badge badge-green">✓</span>';
+    else if(r.status === 'stopped') statusBadge = '<span class="badge badge-yellow">⏹</span>';
     else statusBadge = '<span class="badge badge-red">✗</span>';
 
     // Type badge
@@ -1892,8 +2009,35 @@ function addTrademark() {
   db.unshift({ id:'tm_'+Date.now(), term, category:cat, dateAdded:new Date().toISOString().slice(0,10) });
   DB.setTrademark(db);
   document.getElementById('tmInput').value = '';
+
+  // Immediately filter this term from ALL existing results titles & keywords
+  let cleaned = 0;
+  if(results && results.length > 0) {
+    results.forEach(r => {
+      // Remove from title
+      const oldTitle = r.title;
+      r.title = filterBannedFromTitle(r.title);
+      if(oldTitle !== r.title) cleaned++;
+
+      // Remove from validKeywords
+      const beforeLen = r.validKeywords.length;
+      r.validKeywords = r.validKeywords.filter(kw => !kw.toLowerCase().includes(term.toLowerCase()));
+      if(r.validKeywords.length < beforeLen) cleaned++;
+
+      // Remove from keywords
+      r.keywords = r.keywords.filter(kw => !kw.toLowerCase().includes(term.toLowerCase()));
+    });
+    renderResults();
+  }
+
   renderTrademarkDB();
   updateSettingsStats();
+
+  if(cleaned > 0) {
+    showStatus(`✅ เพิ่ม "${term}" แล้ว — ลบออกจากผลลัพธ์ ${cleaned} รายการทันที`,'success');
+  } else {
+    showStatus(`✅ เพิ่ม "${term}" เป็นคำต้องห้ามแล้ว — จะไม่ปรากฏใน Title อีก`,'success');
+  }
 }
 
 function deleteTrademark(id) {
