@@ -108,8 +108,6 @@ tr:hover td { background:rgba(255,153,0,.03); }
 .kw-tag.invalid { border-color:var(--red); color:var(--muted); text-decoration:line-through; }
 .kw-tag.replaced { border-color:var(--yellow); color:var(--yellow); }
 
-/* Color chips */
-.color-chip { display:inline-block; padding:3px 10px; border-radius:3px; font-size:14px; margin:1px; border:1px solid var(--border); }
 
 /* Progress */
 .progress-bar { width:100%; height:5px; background:var(--card2); border-radius:3px; overflow:hidden; margin:6px 0; }
@@ -214,7 +212,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
   <svg width="56" height="56" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="#FF9900"/><text x="20" y="26" text-anchor="middle" fill="#000" font-size="28" font-weight="bold">M</text></svg>
   <div>
     <h1>Amazon Merch Keyword Generator V4</h1>
-    <span>สร้าง SEO Keywords + Title + Colors + Safety Check สำหรับ Amazon Merch on Demand</span>
+    <span>สร้าง SEO Keywords + Title + Safety Check สำหรับ Amazon Merch on Demand</span>
   </div>
 </div>
 
@@ -347,12 +345,11 @@ tr:hover td { background:rgba(255,153,0,.03); }
                 <th class="col-bp1" style="width:160px;cursor:pointer" onclick="toggleColumn('bp1')">BP1 <small>▼</small></th>
                 <th class="col-bp2" style="width:160px;cursor:pointer" onclick="toggleColumn('bp2')">BP2 <small>▼</small></th>
                 <th class="col-desc" style="width:180px;cursor:pointer" onclick="toggleColumn('desc')">Description <small>▼</small></th>
-                <th style="width:120px">Colors</th>
                 <th style="width:60px">สถานะ</th>
               </tr>
             </thead>
             <tbody id="resultsBody">
-              <tr><td colspan="11" style="text-align:center;padding:30px;color:var(--muted)">เลือกรูปและกด "สร้าง Keywords" เพื่อเริ่มต้น</td></tr>
+              <tr><td colspan="10" style="text-align:center;padding:30px;color:var(--muted)">เลือกรูปและกด "สร้าง Keywords" เพื่อเริ่มต้น</td></tr>
             </tbody>
           </table>
         </div>
@@ -635,7 +632,6 @@ tr:hover td { background:rgba(255,153,0,.03); }
             <th>Title</th>
             <th style="width:80px">Type</th>
             <th style="width:80px">Keywords</th>
-            <th style="width:80px">Colors</th>
             <th style="width:60px">สถานะ</th>
           </tr>
         </thead>
@@ -723,23 +719,6 @@ let selectedAPI = 'openai';
 let uploadedImages = [];
 let results = [];
 const collapsedCols = { bp1:false, bp2:false, desc:true };
-
-// ============================================================
-// ALL 34 COLORS
-// ============================================================
-const ALL_COLORS = [
-  'Asphalt Grey','Baby Blue','Black','Brown','Cranberry Red',
-  'Dark Heather Grey','Grass Green','Heather Blue','Heather Grey','Kelly Green',
-  'Lemon Yellow','Navy Blue','Olive','Orange','Pink',
-  'Purple','Red','Royal Blue','Silver Grey','Slate Grey',
-  'White','Dark Green','Burgundy','Golden Yellow','Purple Heather',
-  'Red Heather','Olive Heather','Pink Heather','Sapphire Blue','Ivory',
-  'Light Beige','Light Pink','Light Purple','Mint Green'
-];
-
-const LIGHT_COLORS = ['Baby Blue','Heather Grey','Lemon Yellow','Pink','Silver Grey','White','Golden Yellow','Pink Heather','Ivory','Light Beige','Light Pink','Light Purple','Mint Green'];
-const DARK_COLORS = ['Asphalt Grey','Black','Brown','Cranberry Red','Dark Heather Grey','Navy Blue','Olive','Purple','Slate Grey','Dark Green','Burgundy','Sapphire Blue'];
-const MEDIUM_COLORS = ['Grass Green','Heather Blue','Kelly Green','Orange','Red','Royal Blue','Purple Heather','Red Heather','Olive Heather'];
 
 // ============================================================
 // DATABASE LAYER (localStorage)
@@ -1068,7 +1047,7 @@ function imageToBase64(file) {
 }
 
 // ============================================================
-// AI ANALYSIS (Multi-task: Keywords, Safety, Color, Content)
+// AI ANALYSIS (Multi-task: Keywords, Safety, Content)
 // ============================================================
 async function analyzeImage(file) {
   const apiKey = document.getElementById('apiKey').value;
@@ -1078,9 +1057,6 @@ async function analyzeImage(file) {
   const bp2On = document.getElementById('toggleBP2').checked;
   const descOn = document.getElementById('toggleDesc').checked;
 
-  const colorList = ALL_COLORS.join(', ');
-  const lightList = LIGHT_COLORS.join(', ');
-  const darkList = DARK_COLORS.join(', ');
   const aiBrandOn = document.getElementById('toggleAIBrand').checked;
 
   // Get custom keywords from the keyword database (formerly seasonal)
@@ -1147,15 +1123,7 @@ Analyze the design for restricted content:
 If ANY restricted content is found: type = "man, woman"
 If NO restricted content: type = "man, woman, youth, girls"
 
-## TASK E: Design Color Analysis
-Analyze the main color of text/graphics in the design:
-- If design elements are BLACK/dark colored → recommend LIGHT shirt colors: ${lightList}
-- If design elements are WHITE/light colored → recommend DARK shirt colors: ${darkList}
-- If mixed → recommend both appropriate light and dark colors
-- Choose from ONLY these 34 colors: ${colorList}
-- Select as many appropriate colors as possible (more = better for sales)
-
-## TASK F: Content Generation (Follow Amazon Merch Best Practices)
+## TASK E: Content Generation (Follow Amazon Merch Best Practices)
 ${bp1On ? '- Generate Bullet Point 1 (max 250 chars): Describe the design appeal and who it is perfect for. Use secondary keywords naturally. Tell the customer WHY they want this design.' : '- Skip Bullet Point 1'}
 ${bp2On ? '- Generate Bullet Point 2 (max 250 chars): Describe the occasion/use case (gift idea, birthday, holiday). Include remaining keywords naturally. Avoid keyword stuffing.' : '- Skip Bullet Point 2'}
 ${descOn ? '- Generate Description (max 2000 chars): Write a compelling product description. Weave keywords naturally. Focus on design features, target audience, and gift occasions. DO NOT mention print quality, fabric, or shipping.' : '- Skip Description'}
@@ -1165,7 +1133,7 @@ ${descOn ? '- Generate Description (max 2000 chars): Write a compelling product 
 - DO NOT keyword-stuff - sentences must read naturally (read aloud test)
 - Focus on: design theme, who it is for, occasions, emotional appeal
 
-${aiBrandOn ? '## TASK G: Brand Name\n- Generate a creative, memorable brand name (max 50 chars) suitable for this t-shirt design category\n- Avoid trademarked names, celebrity names, or copyrighted terms' : ''}
+${aiBrandOn ? '## TASK F: Brand Name\n- Generate a creative, memorable brand name (max 50 chars) suitable for this t-shirt design category\n- Avoid trademarked names, celebrity names, or copyrighted terms' : ''}
 
 ## IMPORTANT: Return ONLY valid JSON in this exact format:
 {
@@ -1183,10 +1151,6 @@ ${aiBrandOn ? '## TASK G: Brand Name\n- Generate a creative, memorable brand nam
     "isSafe": true,
     "flags": [],
     "type": "man, woman, youth, girls"
-  },
-  "designColor": {
-    "mainColor": "dark",
-    "recommendedColors": ["White", "Baby Blue", "Pink"]
   },
   "bulletPoint1": "..." or "",
   "bulletPoint2": "..." or "",
@@ -1301,7 +1265,6 @@ function parseAIResponse(content) {
         detectedSeason: parsed.detectedSeason || null,
         detectedElements: parsed.detectedElements || {},
         contentSafety: parsed.contentSafety || { isSafe:true, flags:[], type:'man, woman, youth, girls' },
-        designColor: parsed.designColor || { mainColor:'dark', recommendedColors:['White','Black'] },
         bulletPoint1: parsed.bulletPoint1 || '',
         bulletPoint2: parsed.bulletPoint2 || '',
         description: parsed.description || '',
@@ -1321,7 +1284,6 @@ function parseAIResponse(content) {
     detectedSeason: null,
     detectedElements: {},
     contentSafety: { isSafe:true, flags:[], type:'man, woman, youth, girls' },
-    designColor: { mainColor:'dark', recommendedColors:['White','Black'] },
     bulletPoint1:'', bulletPoint2:'', description:'', suggestedBrand:''
   };
 }
@@ -1603,8 +1565,6 @@ async function generateKeywords() {
       validKeywords: [],
       amazonResults: [],
       removedKeywords: [],
-      colors: [],
-      designColorType: '',
       bulletPoint1: '',
       bulletPoint2: '',
       description: '',
@@ -1629,8 +1589,6 @@ async function generateKeywords() {
       result.detectedElements = ai.detectedElements || {};
       result.contentSafety = ai.contentSafety;
       result.type = ai.contentSafety?.type || 'man, woman, youth, girls';
-      result.colors = ai.designColor?.recommendedColors || [];
-      result.designColorType = ai.designColor?.mainColor || 'unknown';
       // Respect Content Options toggles — only store content if toggle is ON
       const bp1Active = document.getElementById('toggleBP1').checked;
       const bp2Active = document.getElementById('toggleBP2').checked;
@@ -1710,7 +1668,6 @@ async function generateKeywords() {
         dateCreated: new Date().toISOString().slice(0,10),
         keywords: result.validKeywords,
         type: result.type,
-        colors: result.colors,
         season: result.detectedSeason
       });
       DB.setHistory(hist.slice(0,500)); // Keep max 500
@@ -1755,7 +1712,7 @@ async function generateKeywords() {
 function renderResults() {
   const tbody = document.getElementById('resultsBody');
   if(!results.length) {
-    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;padding:30px;color:var(--muted)">เลือกรูปและกด "สร้าง Keywords" เพื่อเริ่มต้น</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:30px;color:var(--muted)">เลือกรูปและกด "สร้าง Keywords" เพื่อเริ่มต้น</td></tr>';
     return;
   }
 
@@ -1787,12 +1744,6 @@ function renderResults() {
     const descClass = collapsedCols.desc ? 'td-collapsed' : '';
     const descHTML = collapsedCols.desc ? '' : `<div contenteditable="true" class="editable-cell" style="max-height:80px;overflow-y:auto" oninput="results[${i}].description=this.textContent.substring(0,2000)">${r.description||''}</div><span class="char-count ${(r.description||'').length>2000?'char-over':'char-ok'}">${(r.description||'').length}/2000</span>`;
 
-    // Colors
-    const colorsHTML = r.colors.length > 0
-      ? r.colors.slice(0,8).map(c => `<span class="color-chip">${c}</span>`).join('')
-        + (r.colors.length > 8 ? `<br><small style="color:var(--muted)">+${r.colors.length-8} สี</small>` : '')
-      : '-';
-
     // Title char count
     const tLen = r.title.length;
 
@@ -1811,7 +1762,6 @@ function renderResults() {
       <td class="${bp1Class}">${bp1HTML}</td>
       <td class="${bp2Class}">${bp2HTML}</td>
       <td class="${descClass}">${descHTML}</td>
-      <td style="max-width:120px">${colorsHTML}</td>
       <td>${statusBadge}${r.error?'<br><small style="color:var(--red)">'+r.error+'</small>':''}</td>
     </tr>`;
   }).join('');
@@ -1841,11 +1791,7 @@ function exportExcel() {
     'Image Path','Input Language','Title','Description','Tags','Type','Color','',
     'Brand','Bullet Points 1','Bullet Points 2',
     'Color1','Color2','Color3','Color4','Color5','Color6','Color7','Color8','Color9','Color10',
-    'Color11','Color12','Color13','Color14','Color15','Color16','Color17','Color18','Color19','Color20',
-    'Color21','Color22','Color23','Color24','Color25','Color26','Color27','Color28','Color29','Color30',
-    'Color31','Color32','Color33','Color34',
-    'Product','Marketplace','Price US','Price GB','Price DE','Price FR','Price IT','Price ES','Price JP',
-    'Print','Draft','Auto Translate','','Collection','Category','Background Color (Hex)'
+    'Product','Marketplace','Price US'
   ];
   const wsData = [headers];
   results.forEach(r => {
@@ -1857,21 +1803,21 @@ function exportExcel() {
       r.description || '',
       validKWs,
       r.type,
-      r.colors[0] ? r.colors[0].toLowerCase().replace(/\s+/g,'_') : 'black',
+      'black',
       '',
       r.brand,
       r.bulletPoint1 || '',
       r.bulletPoint2 || ''
     ];
-    for(let c=0;c<34;c++) row.push(r.colors[c] ? r.colors[c].toLowerCase().replace(/\s+/g,'_') : '');
-    row.push('Standard t-shirt','US','15.99','','','','','','','','','','','','','');
+    for(let c=0;c<10;c++) row.push('');
+    row.push('Standard t-shirt','US','15.99');
     wsData.push(row);
   });
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.aoa_to_sheet(wsData);
-  const colWidths = [{wch:25},{wch:12},{wch:60},{wch:60},{wch:50},{wch:25},{wch:16},{wch:3},{wch:20},{wch:40},{wch:40}];
-  for(let c=0;c<34;c++) colWidths.push({wch:16});
-  colWidths.push({wch:18},{wch:12},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:8},{wch:8},{wch:14},{wch:3},{wch:14},{wch:14},{wch:20});
+  const colWidths = [{wch:25},{wch:12},{wch:60},{wch:60},{wch:50},{wch:25},{wch:16},{wch:3},{wch:20},{wch:40},{wch:40},
+    {wch:16},{wch:16},{wch:16},{wch:16},{wch:16},{wch:16},{wch:16},{wch:16},{wch:16},{wch:16},
+    {wch:18},{wch:12},{wch:10}];
   ws['!cols'] = colWidths;
   XLSX.utils.book_append_sheet(wb, ws, 'ชีต1');
   const now = new Date();
@@ -2143,7 +2089,7 @@ function renderHistoryDB() {
   const db = DB.getHistory().filter(h => !search || h.title.toLowerCase().includes(search) || (h.keywords||[]).some(k=>k.toLowerCase().includes(search)));
   document.getElementById('historyCount').textContent = DB.getHistory().length + ' รายการ';
   document.getElementById('historyBody').innerHTML = db.length === 0
-    ? '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--muted)">ยังไม่มีประวัติ</td></tr>'
+    ? '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">ยังไม่มีประวัติ</td></tr>'
     : db.slice(0,100).map((h,i) => `<tr>
         <td>${i+1}</td>
         <td>${h.dateCreated}</td>
@@ -2151,7 +2097,6 @@ function renderHistoryDB() {
         <td style="font-size:22px">${h.title}</td>
         <td style="font-size:20px">${h.type||'-'}</td>
         <td><span class="badge badge-green">${(h.keywords||[]).length} kw</span></td>
-        <td><span class="badge badge-blue">${(h.colors||[]).length} สี</span></td>
         <td>${h.season?`<span class="season-badge">${h.season}</span>`:'✅'}</td>
       </tr>`).join('');
 }
