@@ -233,46 +233,49 @@ tr:hover td { background:rgba(255,153,0,.03); }
   <div class="grid2">
     <!-- LEFT PANEL -->
     <div>
-      <!-- Brand Name -->
+      <!-- AI Status Badge -->
+      <div id="apiMiniStatus" class="panel" style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+        <span id="apiMiniProvider" style="color:var(--muted);font-size:14px">AI: ยังไม่พร้อมทำงาน</span>
+        <a href="#" onclick="event.preventDefault();switchTab('apiconfig')" style="color:var(--blue);font-size:13px;text-decoration:none">ตั้งค่า AI →</a>
+      </div>
+
+      <!-- Content Options (Brand + Toggles) -->
       <div class="panel">
-        <h2>🏷️ Brand</h2>
-        <div class="toggle-row" style="margin-bottom:8px">
-          <div class="toggle-label">🤖 AI คิด Brand ให้</div>
+        <h2>📝 Content Options</h2>
+
+        <!-- Brand Name -->
+        <div class="toggle-row">
+          <div class="toggle-label">Brand Name <small>(50 ตัวอักษร)</small> <small style="color:var(--gold)">AI คิดให้</small></div>
           <label class="toggle-switch">
             <input type="checkbox" id="toggleAIBrand" onchange="toggleAIBrandFn()">
             <span class="toggle-slider"></span>
           </label>
         </div>
-        <div class="field">
-          <label>Brand Name (50 ตัวอักษร)</label>
+        <div style="margin-bottom:8px">
           <input type="text" id="brandName" placeholder="ชื่อแบรนด์ของคุณ" maxlength="50">
           <span class="char-count char-ok" id="brandCount">0/50</span>
+          <button class="btn btn-sm btn-green" onclick="applyBrandToKeywords()" style="margin-top:6px;width:100%;font-size:13px">✅ ใช้ Brand นี้ทุกสินค้า</button>
         </div>
-        <div id="apiMiniStatus" style="padding:6px 10px;border-radius:6px;background:var(--card2);font-size:22px;margin-top:4px;display:flex;justify-content:space-between;align-items:center">
-          <span id="apiMiniProvider" style="color:var(--muted)">AI: ยังไม่ได้ตั้งค่า</span>
-          <a href="#" onclick="event.preventDefault();switchTab('apiconfig')" style="color:var(--blue);font-size:22px;text-decoration:none">ตั้งค่า AI →</a>
-        </div>
-      </div>
 
-      <!-- Content Options -->
-      <div class="panel">
-        <h2>📝 Content Options</h2>
+        <hr style="border:none;border-top:1px solid var(--card2);margin:12px 0">
+
+        <!-- Toggles -->
         <div class="toggle-row">
-          <div class="toggle-label">Bullet Point 1 <small>(250 chars)</small></div>
+          <div class="toggle-label">Bullet Point 1 <small>(250 chars)</small> <small style="color:var(--gold)">AI คิดให้</small></div>
           <label class="toggle-switch">
             <input type="checkbox" id="toggleBP1" checked onchange="saveToggles()">
             <span class="toggle-slider"></span>
           </label>
         </div>
         <div class="toggle-row">
-          <div class="toggle-label">Bullet Point 2 <small>(250 chars)</small></div>
+          <div class="toggle-label">Bullet Point 2 <small>(250 chars)</small> <small style="color:var(--gold)">AI คิดให้</small></div>
           <label class="toggle-switch">
             <input type="checkbox" id="toggleBP2" checked onchange="saveToggles()">
             <span class="toggle-slider"></span>
           </label>
         </div>
         <div class="toggle-row">
-          <div class="toggle-label">Description <small>(2,000 chars)</small></div>
+          <div class="toggle-label">Description <small>(2,000 chars)</small> <small style="color:var(--gold)">AI คิดให้</small></div>
           <label class="toggle-switch">
             <input type="checkbox" id="toggleDesc" onchange="saveToggles()">
             <span class="toggle-slider"></span>
@@ -826,12 +829,35 @@ function showAPITestResult(msg, type) {
 function updateAPIStatus() {
   const key = document.getElementById('apiKey')?.value;
   const miniProv = document.getElementById('apiMiniProvider');
+  const settingsLink = document.querySelector('#apiMiniStatus > a');
   if(miniProv) {
     if(key) {
-      miniProv.innerHTML = `AI: <strong style="color:var(--green)">GPT-4o Mini (OpenRouter)</strong> ✅`;
+      miniProv.innerHTML = `🟢 <strong style="color:var(--green)">AI พร้อมทำงาน</strong>`;
+      if(settingsLink) settingsLink.textContent = 'ตั้งค่า AI →';
     } else {
-      miniProv.innerHTML = `AI: <strong style="color:var(--red)">ยังไม่ได้ตั้งค่า</strong>    <a href="#" onclick="switchTab('apiconfig');return false" style="color:var(--blue);font-size:12px">ตั้งค่า AI →</a>`;
+      miniProv.innerHTML = `🔴 <strong style="color:var(--red)">AI ยังไม่พร้อมทำงาน</strong>`;
+      if(settingsLink) settingsLink.textContent = 'ตั้งค่า AI →';
     }
+  }
+}
+
+function applyBrandToKeywords() {
+  const brand = document.getElementById('brandName').value.trim();
+  if(!brand) {
+    alert('กรุณาใส่ชื่อ Brand ก่อน');
+    return;
+  }
+  // Save brand to settings
+  const s = DB.getSettings();
+  s.brand = brand;
+  DB.setSettings(s);
+  // Update brand in all existing results
+  if(results && results.length > 0) {
+    results.forEach(r => { r.brand = brand; });
+    renderResults();
+    alert('✅ ใช้ Brand "' + brand + '" กับผลลัพธ์ทั้งหมดแล้ว!');
+  } else {
+    alert('✅ บันทึก Brand "' + brand + '" แล้ว จะใช้ตอนสร้าง Keywords ครั้งถัดไป');
   }
 }
 
