@@ -363,115 +363,75 @@ tr:hover td { background:rgba(255,153,0,.03); }
 <div id="tab-apiconfig" class="tab-content">
 <div class="container" style="max-width:900px">
   <div class="panel">
-    <h2>🔑 ตั้งค่า AI API Provider</h2>
-    <p style="font-size:24px;color:var(--muted);margin-bottom:16px">เลือก AI Provider และใส่ API Key สำหรับวิเคราะห์รูปลายเสื้อ (รองรับ 4 providers)</p>
+    <h2>🔑 ตั้งค่า AI API — OpenRouter</h2>
+    <p style="font-size:24px;color:var(--muted);margin-bottom:16px">ใส่ API Key จาก OpenRouter เพื่อใช้ AI วิเคราะห์รูปลายเสื้อ</p>
 
-    <!-- Provider Selection -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
-      <div class="api-opt" onclick="selectAPI('openai')" id="opt-openai">
-        <div style="font-size:20px;margin-bottom:4px">🟢</div>
-        <div class="name">OpenAI</div>
-        <div class="desc">GPT-4o Vision</div>
+    <!-- Provider Display (Locked to OpenRouter) -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding:12px 16px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.4);border-radius:8px">
+      <div style="font-size:28px">🔵</div>
+      <div>
+        <div style="font-size:18px;font-weight:bold;color:var(--blue)">OpenRouter</div>
+        <div style="font-size:14px;color:var(--muted)">Model: <strong style="color:var(--gold)">GPT-4o Mini</strong> (ล็อกไว้)</div>
       </div>
-      <div class="api-opt" onclick="selectAPI('claude')" id="opt-claude">
-        <div style="font-size:20px;margin-bottom:4px">🟠</div>
-        <div class="name">Claude</div>
-        <div class="desc">Sonnet 4 Vision</div>
-      </div>
-      <div class="api-opt" onclick="selectAPI('openrouter')" id="opt-openrouter">
-        <div style="font-size:20px;margin-bottom:4px">🔵</div>
-        <div class="name">OpenRouter</div>
-        <div class="desc">Multi-Model</div>
-      </div>
-      <div class="api-opt" onclick="selectAPI('gemini')" id="opt-gemini">
-        <div style="font-size:20px;margin-bottom:4px">🔴</div>
-        <div class="name">Gemini</div>
-        <div class="desc">Gemini 2.0 Flash</div>
-      </div>
+    </div>
+
+    <!-- Hidden elements for compatibility -->
+    <div id="opt-openai" class="hidden"></div>
+    <div id="opt-claude" class="hidden"></div>
+    <div id="opt-openrouter" class="hidden active"></div>
+    <div id="opt-gemini" class="hidden"></div>
+    <div id="openrouterModelSection" class="hidden">
+      <select id="openrouterModel"><option value="openai/gpt-4o-mini" selected>GPT-4o Mini</option></select>
+    </div>
+    <div id="geminiModelSection" class="hidden">
+      <select id="geminiModel"><option value="gemini-2.0-flash">Gemini 2.0 Flash</option></select>
     </div>
 
     <!-- API Key Input -->
     <div class="field">
-      <label id="apiKeyLabel">API Key</label>
+      <label id="apiKeyLabel">OpenRouter API Key</label>
       <div style="display:flex;gap:8px">
-        <input type="password" id="apiKey" placeholder="ใส่ API Key ที่นี่..." style="flex:1">
+        <input type="password" id="apiKey" placeholder="ใส่ API Key ที่นี่ เช่น sk-or-..." style="flex:1">
         <button class="btn btn-sm btn-blue" onclick="toggleShowKey()">👁️</button>
         <button class="btn btn-sm btn-green" onclick="testAPIKey()">🧪 ทดสอบ</button>
       </div>
-      <div id="apiKeyHint" style="font-size:22px;color:var(--muted);margin-top:4px"></div>
-    </div>
-
-    <!-- OpenRouter Model Selection (only shown for OpenRouter) -->
-    <div id="openrouterModelSection" class="hidden">
-      <div class="field">
-        <label>เลือก Model (OpenRouter)</label>
-        <select id="openrouterModel">
-          <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash (Free)</option>
-          <option value="openai/gpt-4o">GPT-4o</option>
-          <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
-          <option value="anthropic/claude-sonnet-4">Claude Sonnet 4</option>
-          <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
-          <option value="google/gemini-pro-vision">Gemini Pro Vision</option>
-          <option value="meta-llama/llama-3.2-90b-vision-instruct">Llama 3.2 90B Vision</option>
-          <option value="qwen/qwen2.5-vl-72b-instruct">Qwen 2.5 VL 72B</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Gemini Model Selection -->
-    <div id="geminiModelSection" class="hidden">
-      <div class="field">
-        <label>เลือก Model (Gemini)</label>
-        <select id="geminiModel">
-          <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
-          <option value="gemini-2.0-flash-lite">Gemini 2.0 Flash Lite</option>
-          <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
-          <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
-        </select>
-      </div>
+      <div id="apiKeyHint" style="font-size:22px;color:var(--muted);margin-top:4px">Format: sk-or-... (สมัครที่ openrouter.ai/keys)</div>
     </div>
 
     <!-- Test Result -->
     <div id="apiTestResult" class="hidden mt8"></div>
   </div>
 
-  <!-- Provider Info Cards -->
-  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
-    <div class="panel">
-      <h2 style="font-size:13px">🟢 OpenAI</h2>
-      <div style="font-size:22px;color:var(--muted)">
-        <p>Model: <strong>GPT-4o</strong></p>
-        <p>Key format: <code>sk-...</code></p>
-        <p>สมัครได้ที่: <a href="https://platform.openai.com/api-keys" target="_blank" class="amazon-link" style="font-size:22px">platform.openai.com</a></p>
-        <p style="margin-top:4px">Vision ดี, Keywords แม่นยำ, ราคาปานกลาง</p>
-      </div>
+  <!-- Why GPT-4o Mini? -->
+  <div class="panel" style="border-left:3px solid var(--gold)">
+    <h2 style="font-size:15px;margin-bottom:8px">⭐ ทำไมถึงเลือก GPT-4o Mini?</h2>
+    <div style="font-size:15px;color:var(--muted);line-height:1.8">
+      <p><strong style="color:var(--green)">ราคาถูกมาก</strong> — ค่าใช้จ่ายต่ำกว่า GPT-4o ถึง 10 เท่า ประหยัดต้นทุนสำหรับการวิเคราะห์ลายเสื้อจำนวนมาก</p>
+      <p><strong style="color:var(--green)">เร็ว</strong> — ประมวลผลรวดเร็ว ไม่ต้องรอนาน เหมาะกับงานที่ต้องวิเคราะห์รูปหลายรูปพร้อมกัน</p>
+      <p><strong style="color:var(--green)">รองรับ Vision</strong> — วิเคราะห์รูปภาพได้ดี สามารถอ่านลายเสื้อแล้วสร้าง Keywords ได้แม่นยำ</p>
+      <p><strong style="color:var(--green)">ผ่าน OpenRouter</strong> — ไม่ต้องสมัคร OpenAI ตรง จ่ายเท่าที่ใช้ ไม่มีค่ารายเดือน</p>
     </div>
-    <div class="panel">
-      <h2 style="font-size:13px">🟠 Claude (Anthropic)</h2>
-      <div style="font-size:22px;color:var(--muted)">
-        <p>Model: <strong>Claude Sonnet 4</strong></p>
-        <p>Key format: <code>sk-ant-...</code></p>
-        <p>สมัครได้ที่: <a href="https://console.anthropic.com/" target="_blank" class="amazon-link" style="font-size:22px">console.anthropic.com</a></p>
-        <p style="margin-top:4px">วิเคราะห์รูปละเอียด, Safety check ดี</p>
-      </div>
-    </div>
-    <div class="panel">
-      <h2 style="font-size:13px">🔵 OpenRouter</h2>
-      <div style="font-size:22px;color:var(--muted)">
-        <p>Model: <strong>เลือกได้หลาย model</strong></p>
-        <p>Key format: <code>sk-or-...</code></p>
-        <p>สมัครได้ที่: <a href="https://openrouter.ai/keys" target="_blank" class="amazon-link" style="font-size:22px">openrouter.ai</a></p>
-        <p style="margin-top:4px">ใช้หลาย model ได้, มี free tier, คุ้มค่า</p>
-      </div>
-    </div>
-    <div class="panel">
-      <h2 style="font-size:13px">🔴 Google Gemini</h2>
-      <div style="font-size:22px;color:var(--muted)">
-        <p>Model: <strong>Gemini 2.0 Flash</strong></p>
-        <p>Key format: <code>AIza...</code></p>
-        <p>สมัครได้ที่: <a href="https://aistudio.google.com/apikey" target="_blank" class="amazon-link" style="font-size:22px">aistudio.google.com</a></p>
-        <p style="margin-top:4px">ฟรี quota สูง, เร็ว, วิเคราะห์สีดี</p>
-      </div>
+  </div>
+
+  <!-- Sign Up Link -->
+  <div class="panel" style="text-align:center;border-left:3px solid var(--blue)">
+    <h2 style="font-size:15px;margin-bottom:12px">🚀 สมัคร OpenRouter ฟรี!</h2>
+    <a href="https://openrouter.ai/keys" target="_blank" class="btn btn-green" style="font-size:18px;padding:12px 32px;display:inline-block;text-decoration:none">
+      👉 กดที่นี่เพื่อสมัคร OpenRouter และรับ API Key
+    </a>
+  </div>
+
+  <!-- Step-by-step Guide -->
+  <div class="panel" style="border-left:3px solid var(--green)">
+    <h2 style="font-size:15px;margin-bottom:12px">📖 วิธีสมัคร OpenRouter แบบง่ายๆ (5 นาที)</h2>
+    <div style="font-size:15px;color:var(--muted);line-height:2">
+      <p><strong style="color:var(--gold)">ขั้นตอนที่ 1:</strong> เข้าเว็บ <a href="https://openrouter.ai" target="_blank" class="amazon-link" style="font-size:15px">openrouter.ai</a> แล้วกดปุ่ม <strong>"Sign Up"</strong> หรือ <strong>"Log In"</strong> มุมขวาบน</p>
+      <p><strong style="color:var(--gold)">ขั้นตอนที่ 2:</strong> เลือกสมัครด้วย <strong>Google Account</strong> หรือ <strong>Email</strong> (แนะนำ Google เพราะง่ายที่สุด)</p>
+      <p><strong style="color:var(--gold)">ขั้นตอนที่ 3:</strong> เมื่อเข้าสู่ระบบแล้ว ไปที่เมนู <strong>"Keys"</strong> หรือเข้า <a href="https://openrouter.ai/keys" target="_blank" class="amazon-link" style="font-size:15px">openrouter.ai/keys</a> โดยตรง</p>
+      <p><strong style="color:var(--gold)">ขั้นตอนที่ 4:</strong> กดปุ่ม <strong>"Create Key"</strong> ตั้งชื่อ Key อะไรก็ได้ เช่น "Merch Generator" แล้วกด <strong>"Create"</strong></p>
+      <p><strong style="color:var(--gold)">ขั้นตอนที่ 5:</strong> <strong style="color:var(--red)">คัดลอก API Key ทันที!</strong> (จะขึ้นแค่ครั้งเดียว) Key จะเริ่มด้วย <code>sk-or-...</code></p>
+      <p><strong style="color:var(--gold)">ขั้นตอนที่ 6:</strong> นำ Key มาวางในช่องด้านบน แล้วกด <strong>"🧪 ทดสอบ"</strong> ถ้าขึ้น ✅ แสดงว่าใช้ได้แล้ว!</p>
+      <p style="margin-top:8px"><strong style="color:var(--blue)">💡 เติมเงิน:</strong> ไปที่ <a href="https://openrouter.ai/credits" target="_blank" class="amazon-link" style="font-size:15px">openrouter.ai/credits</a> กด <strong>"Buy Credits"</strong> เติมขั้นต่ำ $5 จ่ายผ่านบัตรเครดิต (GPT-4o Mini ราคาถูกมาก ใช้ได้นับพันรูป)</p>
     </div>
   </div>
 </div>
@@ -715,7 +675,7 @@ tr:hover td { background:rgba(255,153,0,.03); }
 // ============================================================
 // STATE
 // ============================================================
-let selectedAPI = 'openai';
+let selectedAPI = 'openrouter';
 let uploadedImages = [];
 let results = [];
 const collapsedCols = { bp1:false, bp2:false, desc:true };
@@ -739,7 +699,7 @@ const DB = {
   getHistory() { return this.get('history', []); },
   setHistory(v) { this.set('history', v); },
 
-  getSettings() { return this.get('settings', { bp1:true, bp2:true, desc:false, brand:'', api:'openai', apiKey:'' }); },
+  getSettings() { return this.get('settings', { bp1:true, bp2:true, desc:false, brand:'', api:'openrouter', apiKey:'' }); },
   setSettings(v) { this.set('settings', v); },
 
   defaultSeasonal() {
@@ -814,7 +774,7 @@ function init() {
   const s = DB.getSettings();
   if(s.brand) document.getElementById('brandName').value = s.brand;
   if(s.apiKey) document.getElementById('apiKey').value = s.apiKey;
-  if(s.api) { selectedAPI = s.api; selectAPI(s.api); }
+  selectedAPI = 'openrouter'; selectAPI('openrouter');
   updateAPIStatus();
 }
 
@@ -834,33 +794,9 @@ function switchTab(tab) {
 // API SELECTION
 // ============================================================
 function selectAPI(api) {
-  selectedAPI = api;
-  document.querySelectorAll('.api-opt').forEach(el => el.classList.remove('active'));
-  document.getElementById('opt-'+api).classList.add('active');
-  const s = DB.getSettings(); s.api = api; DB.setSettings(s);
-
-  // Show/hide model sections
-  document.getElementById('openrouterModelSection').classList.toggle('hidden', api !== 'openrouter');
-  document.getElementById('geminiModelSection').classList.toggle('hidden', api !== 'gemini');
-
-  // Update hint text
-  const hints = {
-    openai: 'Format: sk-... (สมัครที่ platform.openai.com)',
-    claude: 'Format: sk-ant-... (สมัครที่ console.anthropic.com)',
-    openrouter: 'Format: sk-or-... (สมัครที่ openrouter.ai/keys)',
-    gemini: 'Format: AIza... (สมัครที่ aistudio.google.com/apikey)'
-  };
-  const labels = {
-    openai: 'OpenAI API Key',
-    claude: 'Anthropic (Claude) API Key',
-    openrouter: 'OpenRouter API Key',
-    gemini: 'Google Gemini API Key'
-  };
-  const hintEl = document.getElementById('apiKeyHint');
-  const labelEl = document.getElementById('apiKeyLabel');
-  if(hintEl) hintEl.textContent = hints[api] || '';
-  if(labelEl) labelEl.textContent = labels[api] || 'API Key';
-
+  // Locked to OpenRouter only
+  selectedAPI = 'openrouter';
+  const s = DB.getSettings(); s.api = 'openrouter'; DB.setSettings(s);
   updateAPIStatus();
 }
 
@@ -874,23 +810,9 @@ async function testAPIKey() {
   if(!key) { showAPITestResult('❌ กรุณาใส่ API Key ก่อน','error'); return; }
   showAPITestResult('<span class="spinner"></span> กำลังทดสอบ...','info');
   try {
-    if(selectedAPI === 'openai') {
-      const r = await fetch('https://api.openai.com/v1/models', {headers:{'Authorization':'Bearer '+key}});
-      if(r.ok) showAPITestResult('✅ OpenAI API Key ใช้งานได้!','success');
-      else throw new Error('Invalid key ('+r.status+')');
-    } else if(selectedAPI === 'claude') {
-      // Just check format
-      if(key.startsWith('sk-ant-')) showAPITestResult('✅ Format ถูกต้อง (จะทดสอบจริงตอนใช้งาน)','success');
-      else showAPITestResult('⚠️ Claude key ควรเริ่มด้วย sk-ant-','error');
-    } else if(selectedAPI === 'openrouter') {
-      const r = await fetch('https://openrouter.ai/api/v1/auth/key',{headers:{'Authorization':'Bearer '+key}});
-      if(r.ok) { const d = await r.json(); showAPITestResult('✅ OpenRouter OK! Credit: $'+(d.data?.limit_remaining||'N/A'),'success'); }
-      else throw new Error('Invalid key');
-    } else if(selectedAPI === 'gemini') {
-      const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models?key='+key);
-      if(r.ok) showAPITestResult('✅ Gemini API Key ใช้งานได้!','success');
-      else throw new Error('Invalid key ('+r.status+')');
-    }
+    const r = await fetch('https://openrouter.ai/api/v1/auth/key',{headers:{'Authorization':'Bearer '+key}});
+    if(r.ok) { const d = await r.json(); showAPITestResult('✅ OpenRouter OK! Credit: $'+(d.data?.limit_remaining||'N/A'),'success'); }
+    else throw new Error('Invalid key');
   } catch(e) { showAPITestResult('❌ ทดสอบไม่ผ่าน: '+e.message,'error'); }
 }
 
@@ -903,14 +825,12 @@ function showAPITestResult(msg, type) {
 
 function updateAPIStatus() {
   const key = document.getElementById('apiKey')?.value;
-  const providerNames = {openai:'OpenAI GPT-4o',claude:'Claude Sonnet 4',openrouter:'OpenRouter',gemini:'Gemini 2.0 Flash'};
-  // Update mini status in Generator tab
   const miniProv = document.getElementById('apiMiniProvider');
   if(miniProv) {
     if(key) {
-      miniProv.innerHTML = `AI: <strong style="color:var(--green)">${providerNames[selectedAPI]||selectedAPI}</strong> ✅`;
+      miniProv.innerHTML = `AI: <strong style="color:var(--green)">GPT-4o Mini (OpenRouter)</strong> ✅`;
     } else {
-      miniProv.innerHTML = `AI: <strong style="color:var(--red)">ยังไม่ได้ตั้งค่า</strong>`;
+      miniProv.innerHTML = `AI: <strong style="color:var(--red)">ยังไม่ได้ตั้งค่า</strong>    <a href="#" onclick="switchTab('apiconfig');return false" style="color:var(--blue);font-size:12px">ตั้งค่า AI →</a>`;
     }
   }
 }
@@ -1157,101 +1077,32 @@ ${aiBrandOn ? '## TASK F: Brand Name\n- Generate a creative, memorable brand nam
   "description": "..." or ""${aiBrandOn ? ',\n  "suggestedBrand": "Creative Brand Name"' : ''}
 }`;
 
-  if(selectedAPI === 'openai') {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
-      body:JSON.stringify({
-        model:'gpt-4o',
-        messages:[
-          {role:'system',content:'You are an expert Amazon Merch on Demand analyst. Always respond with valid JSON only.'},
-          {role:'user',content:[
-            {type:'text',text:prompt},
-            {type:'image_url',image_url:{url:'data:'+mime+';base64,'+base64}}
-          ]}
-        ],
-        max_tokens:2000,
-        temperature:0.7
-      })
-    });
-    const data = await res.json();
-    if(data.error) throw new Error(data.error.message);
-    return parseAIResponse(data.choices[0].message.content);
-
-  } else if(selectedAPI === 'claude') {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key':apiKey,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
-      },
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:2000,
-        messages:[{role:'user',content:[
-          {type:'image',source:{type:'base64',media_type:mime,data:base64}},
-          {type:'text',text:prompt}
-        ]}]
-      })
-    });
-    const data = await res.json();
-    if(data.error) throw new Error(data.error.message);
-    return parseAIResponse(data.content[0].text);
-
-  } else if(selectedAPI === 'openrouter') {
-    const model = document.getElementById('openrouterModel')?.value || 'google/gemini-2.0-flash-exp:free';
-    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':'Bearer '+apiKey,
-        'HTTP-Referer':'https://merch-keyword-generator.app',
-        'X-Title':'Amazon Merch Keyword Generator'
-      },
-      body:JSON.stringify({
-        model: model,
-        messages:[
-          {role:'system',content:'You are an expert Amazon Merch on Demand analyst. Always respond with valid JSON only.'},
-          {role:'user',content:[
-            {type:'text',text:prompt},
-            {type:'image_url',image_url:{url:'data:'+mime+';base64,'+base64}}
-          ]}
-        ],
-        max_tokens:2000,
-        temperature:0.7
-      })
-    });
-    const data = await res.json();
-    if(data.error) throw new Error(data.error.message || JSON.stringify(data.error));
-    return parseAIResponse(data.choices[0].message.content);
-
-  } else if(selectedAPI === 'gemini') {
-    const model = document.getElementById('geminiModel')?.value || 'gemini-2.0-flash';
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        contents:[{
-          parts:[
-            {inlineData:{mimeType:mime,data:base64}},
-            {text:prompt}
-          ]
-        }],
-        generationConfig:{
-          temperature:0.7,
-          maxOutputTokens:2000,
-          responseMimeType:'application/json'
-        }
-      })
-    });
-    const data = await res.json();
-    if(data.error) throw new Error(data.error.message || JSON.stringify(data.error));
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if(!text) throw new Error('Gemini: ไม่ได้รับผลลัพธ์');
-    return parseAIResponse(text);
-  }
+  // Use OpenRouter with GPT-4o Mini (locked)
+  const model = 'openai/gpt-4o-mini';
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'Authorization':'Bearer '+apiKey,
+      'HTTP-Referer':'https://apirak2499.github.io/amazon-merch-keyword-generator/',
+      'X-Title':'Amazon Merch Keyword Generator'
+    },
+    body:JSON.stringify({
+      model: model,
+      messages:[
+        {role:'system',content:'You are an expert Amazon Merch on Demand analyst. Always respond with valid JSON only.'},
+        {role:'user',content:[
+          {type:'text',text:prompt},
+          {type:'image_url',image_url:{url:'data:'+mime+';base64,'+base64}}
+        ]}
+      ],
+      max_tokens:2000,
+      temperature:0.7
+    })
+  });
+  const data = await res.json();
+  if(data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+  return parseAIResponse(data.choices[0].message.content);
 }
 
 function parseAIResponse(content) {
